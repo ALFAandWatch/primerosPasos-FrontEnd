@@ -1,14 +1,20 @@
 'use client';
-import { Mensaje } from '@/components/Mensaje/Mensaje';
+import { MensajeAdmin } from '@/components/MensajeAdmin/MensajeAdmin';
 import { enviarMensaje } from '@/services/enviarMensaje';
+import { traerListaDeEmpresas } from '@/services/traerListaDeEmpresas';
 import { MensajesTipo, traerMensajes } from '@/services/traerMensajes';
 import { mensajesDevueltosType } from '@/types/mensajesDevueltosType';
 import { nuevoMensajeType } from '@/types/nuevoMensajeType';
-import { validateNuevoMensaje } from '@/utils/validateNuevoMensaje';
-import { ErrorMessage, Field, Form, Formik, FormikErrors } from 'formik';
+import { validateNuevoMensajeAdmin } from '@/utils/validateNuevoMensajeAdmin';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+
+type Empresa = {
+   id: number;
+   nombreEmpresa: string;
+};
 
 const mensajes = () => {
    const [mensajes, setMensajes] = useState<mensajesDevueltosType[]>([]);
@@ -16,6 +22,9 @@ const mensajes = () => {
    const [usuario, setUsuario] = useState<{ id: number } | null>(null);
    const [mostrarComposeModal, setMostrarComposeModal] = useState(false);
    const [mensajeEnviado, setMensajeEnviado] = useState(false);
+   const [query, setQuery] = useState('');
+   const [filtered, setFiltered] = useState<Empresa[]>([]);
+   const [empresas, setEmpresas] = useState<Empresa[]>([]);
 
    useEffect(() => {
       const stored = sessionStorage.getItem('usuario');
@@ -23,6 +32,18 @@ const mensajes = () => {
          setUsuario(JSON.parse(stored));
       }
    }, []);
+
+   useEffect(() => {
+      const fetchEmpresas = async () => {
+         const data = await traerListaDeEmpresas();
+         setEmpresas(data);
+      };
+      fetchEmpresas();
+   }, []);
+
+   useEffect(() => {
+      console.log('EMPRESAS', empresas);
+   }, [empresas]);
 
    useEffect(() => {
       if (!usuario) return;
@@ -41,8 +62,8 @@ const mensajes = () => {
    const initialValues: nuevoMensajeType = {
       asunto: '',
       contenido: '',
-      remitenteId: usuario?.id ?? 0,
-      destinatarioId: 'admin',
+      remitenteId: usuario?.id || 'admin',
+      destinatarioId: 0,
    };
 
    const handleEnviarMensaje = async (data: nuevoMensajeType) => {
@@ -59,9 +80,21 @@ const mensajes = () => {
       }
    };
 
+   useEffect(() => {
+      if (query.length > 0) {
+         const results = empresas.filter((e) =>
+            e.nombreEmpresa.toLowerCase().includes(query.toLowerCase())
+         );
+         setFiltered(results);
+      } else {
+         setFiltered([]);
+      }
+   }, [query, empresas]);
+
    return (
       <>
-         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 relative overflow-y-auto flex flex-col">
+         <div className="p-6 bg-[#d6dfe7] min-h-screen">
+            <h2 className="text-2xl font-bold text-[#5c7cab] mb-6">Mensajes</h2>
             <div className="flex justify-end gap-2">
                <div className="bg-main p-5 lg:p-3 py-3 lg:py-1 rounded-md font-bold hidden lg:flex lg:w-fit gap-2 items-center hover:brightness-115 hover:cursor-pointer">
                   <div className="relative h-8 aspect-square">
@@ -97,10 +130,9 @@ const mensajes = () => {
             </div>
             <div className="h-[calc(100vh-10rem)] flex flex-col gap-3 lg:gap-2 mt-3 overflow-y-auto w-full pb-30">
                {mensajes.map((mensaje) => (
-                  <Mensaje key={mensaje.id} data={mensaje} />
+                  <MensajeAdmin key={mensaje.id} data={mensaje} />
                ))}
             </div>
-            {/* BOTON DE NUEVO MENSAJE */}
             <div className="fixed bottom-8 right-5 bg-main p-5 py-3 rounded-md font-bold flex gap-2 items-center lg:hidden">
                <div className="relative h-8 aspect-square">
                   <Image
@@ -137,13 +169,56 @@ const mensajes = () => {
                      <Formik
                         onSubmit={handleEnviarMensaje}
                         initialValues={initialValues}
-                        validate={validateNuevoMensaje}
+                        validate={validateNuevoMensajeAdmin}
                      >
                         {({ values, errors, touched }) => (
                            <Form className="flex flex-col gap-4">
                               <h2 className="text-xl md:text-2xl text-main font-bold text-center uppercase">
                                  Nuevo Mensaje
                               </h2>
+
+                              <Field name="destinatario">
+                                 {({ field, form }: any) => (
+                                    <div className="relative">
+                                       <input
+                                          {...field}
+                                          type="text"
+                                          placeholder="Buscar empresa..."
+                                          value={query}
+                                          onChange={(e) => {
+                                             setQuery(e.target.value);
+                                             form.setFieldValue(
+                                                'destinatario',
+                                                e.target.value
+                                             );
+                                          }}
+                                          className="w-full border-2 border-yellow-600/30 p-2 rounded bg-[#FFF8DC] placeholder:text-gray-400 placeholder:italic text-black"
+                                       />
+                                       {filtered.length > 0 && (
+                                          <ul className="absolute z-10 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-y-auto shadow text-gray-500 italic">
+                                             {filtered.map((empresa) => (
+                                                <li
+                                                   key={empresa.id}
+                                                   className="p-2 cursor-pointer hover:bg-gray-100"
+                                                   onClick={() => {
+                                                      setQuery(
+                                                         empresa.nombreEmpresa
+                                                      );
+                                                      form.setFieldValue(
+                                                         'destinatarioId',
+                                                         empresa.id
+                                                      ); // guarda el id real
+                                                      setFiltered([]);
+                                                   }}
+                                                >
+                                                   {empresa.nombreEmpresa}
+                                                </li>
+                                             ))}
+                                          </ul>
+                                       )}
+                                    </div>
+                                 )}
+                              </Field>
 
                               <Field
                                  name="asunto"

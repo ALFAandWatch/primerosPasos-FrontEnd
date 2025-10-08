@@ -47,3 +47,10 @@ body {
    color: var(--foreground);
    font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ACA EMPIEZA LO MIO */
+.sectionMain {
+   padding: 1rem;
+   background: var(--color-fondo);
+   height: 100vh;
+}

@@ -5,6 +5,7 @@ export type empleadoDevueltoType = {
    nombre: string;
    apellido: string;
    cedula: string;
+   activo: boolean;
    usuario: {
       id: number;
       rol: RolEnum;
