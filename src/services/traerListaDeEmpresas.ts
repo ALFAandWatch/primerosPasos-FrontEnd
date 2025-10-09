@@ -5,6 +5,7 @@ export const traerListaDeEmpresas = async () => {
       const response = await axiosInstance.get(
          `empresas/traerTodasLasEmpresas/`
       );
+      console.log('DATOS DEL BACK', response.data);
       return response.data;
    } catch (error: any) {
       if (error.response) {

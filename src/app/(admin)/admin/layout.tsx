@@ -21,6 +21,7 @@ export default function AdminLayout({
    children: React.ReactNode;
 }) {
    const [open, setOpen] = useState(false);
+   const [selected, setSelected] = useState<string | null>(null);
    const router = useRouter();
 
    return (
@@ -55,7 +56,10 @@ export default function AdminLayout({
                               </div>
                               <Link
                                  href="/admin/empleados"
-                                 onClick={() => setOpen(false)}
+                                 onClick={() => {
+                                    setOpen(false);
+                                    setSelected('empleados');
+                                 }}
                                  className="font-semibold"
                               >
                                  Empleados
@@ -73,8 +77,11 @@ export default function AdminLayout({
                                  />
                               </div>
                               <Link
-                                 href="/home/registros/stock"
-                                 onClick={() => setOpen(false)}
+                                 href="/admin/stock"
+                                 onClick={() => {
+                                    setOpen(false);
+                                    setSelected('stock');
+                                 }}
                                  className="font-semibold"
                               >
                                  Stock
@@ -93,10 +100,35 @@ export default function AdminLayout({
                               </div>
                               <Link
                                  href="/admin/mensajes"
-                                 onClick={() => setOpen(false)}
+                                 onClick={() => {
+                                    setOpen(false);
+                                    setSelected('mensajes');
+                                 }}
                                  className="font-semibold"
                               >
                                  Mensajes
+                              </Link>
+                           </div>
+                        </li>
+                        <li>
+                           <div className="flex gap-5 items-center">
+                              <div className="relative w-7 aspect-square">
+                                 <Image
+                                    src="/icons/movimientos.svg"
+                                    alt="Movimientos"
+                                    fill
+                                    sizes="10vw"
+                                 />
+                              </div>
+                              <Link
+                                 href="/admin/movimientos"
+                                 onClick={() => {
+                                    setOpen(false);
+                                    setSelected('movimientos');
+                                 }}
+                                 className="font-semibold"
+                              >
+                                 Movimientos
                               </Link>
                            </div>
                         </li>
