@@ -1,9 +1,9 @@
 import axiosInstance from '@/api/axiosInstance';
 
-export const traerListaDeEmpresas = async () => {
+export const traerEmpresaPorId = async (id: number) => {
    try {
       const response = await axiosInstance.get(
-         `empresas/traerTodasLasEmpresas/`
+         `empresas/traerEmpresaPorId/${id}`
       );
       return response.data;
    } catch (error: any) {

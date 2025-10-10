@@ -2,7 +2,8 @@
 import { MensajeAdmin } from '@/components/MensajeAdmin/MensajeAdmin';
 import { enviarMensaje } from '@/services/enviarMensaje';
 import { traerListaDeEmpresas } from '@/services/traerListaDeEmpresas';
-import { MensajesTipo, traerMensajes } from '@/services/traerMensajes';
+import { MensajesTipo } from '@/services/traerMensajes';
+import { traerMensajesAdmin } from '@/services/traerMensajesAdmin';
 import { mensajesDevueltosType } from '@/types/mensajesDevueltosType';
 import { nuevoMensajeType } from '@/types/nuevoMensajeType';
 import { validateNuevoMensajeAdmin } from '@/utils/validateNuevoMensajeAdmin';
@@ -42,14 +43,10 @@ const mensajes = () => {
    }, []);
 
    useEffect(() => {
-      console.log('EMPRESAS', empresas);
-   }, [empresas]);
-
-   useEffect(() => {
       if (!usuario) return;
 
       const fetchMensajes = async () => {
-         const data = await traerMensajes(opcion, usuario.id);
+         const data = await traerMensajesAdmin(opcion, usuario.id);
          setMensajes(data);
       };
       fetchMensajes();

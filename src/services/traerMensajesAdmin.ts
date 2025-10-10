@@ -1,10 +1,12 @@
 import axiosInstance from '@/api/axiosInstance';
 
-export const traerListaDeEmpresas = async () => {
+export type MensajesTipo = 'all' | 'recibidos' | 'enviados';
+
+export const traerMensajesAdmin = async (tipo: MensajesTipo, id?: number) => {
    try {
-      const response = await axiosInstance.get(
-         `empresas/traerTodasLasEmpresas/`
-      );
+      let url = `mensajes/${tipo}Admin/${id}`;
+
+      const response = await axiosInstance.get(url);
       return response.data;
    } catch (error: any) {
       if (error.response) {
@@ -12,7 +14,7 @@ export const traerListaDeEmpresas = async () => {
          if (status === 500) {
             throw new Error('Error en el servidor. Inténtalo más tarde.');
          } else if (status === 404) {
-            throw new Error('No se encontraron empresas.');
+            throw new Error('No se encontraron mensajes.');
          } else {
             throw new Error('Error desconocido. Inténtalo más tarde.');
          }

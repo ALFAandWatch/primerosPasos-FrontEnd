@@ -22,10 +22,6 @@ const movimientos = () => {
       fetchEmpresas();
    }, []);
 
-   useEffect(() => {
-      console.log(empresas);
-   }, [empresas]);
-
    return (
       <>
          <div className="p-6 bg-[#d6dfe7] min-h-screen">

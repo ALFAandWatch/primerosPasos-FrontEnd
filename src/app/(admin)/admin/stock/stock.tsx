@@ -95,7 +95,7 @@ const stock = () => {
    return (
       <div className="p-6 bg-[#d6dfe7] min-h-screen">
          <h2 className="text-2xl font-bold text-[#5c7cab] mb-6">
-            Lista de Empleados
+            Lista de Stock
          </h2>
 
          <div className="flex w-full items-stretch lg:w-1/3 mb-4">
