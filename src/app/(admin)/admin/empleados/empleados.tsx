@@ -2,6 +2,7 @@
 import { listarEmpleadosAdmin } from '@/services/listarEmpleadosAdmin';
 import { restaurarEmpleado } from '@/services/restaurarEmpleado';
 import { empleadoDevueltoType } from '@/types/empleadoDevueltoType';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -9,9 +10,9 @@ const empleados = () => {
    const [empleados, setEmpleados] = useState<empleadoDevueltoType[]>([]);
    const [searchTerm, setSearchTerm] = useState('');
 
-   useEffect(() => {
-      console.log(empleados);
-   }, [empleados]);
+   // useEffect(() => {
+   //    console.log(empleados);
+   // }, [empleados]);
 
    useEffect(() => {
       const fetchEmpleados = async () => {
@@ -120,7 +121,13 @@ const empleados = () => {
                            <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
                               {empleado.cedula}
                            </td>
-                           <td className="py-3 px-4 border-b border-gray-300">
+                           <td className="py-3 px-4 border-b border-gray-300 flex gap-4">
+                              <Link
+                                 href={`/admin/empleados/verHorarios/${empleado.id}`}
+                                 className="bg-[#5c7cab] hover:bg-[#4a6590] hover:cursor-pointer text-white px-4 py-2 rounded transition-colors duration-200"
+                              >
+                                 Ver horarios
+                              </Link>
                               {!empleado.activo && (
                                  <button
                                     type="button"

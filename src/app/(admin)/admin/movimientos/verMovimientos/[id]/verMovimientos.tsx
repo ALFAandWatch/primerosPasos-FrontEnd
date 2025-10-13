@@ -5,7 +5,7 @@ import { empresaDevueltaType } from '@/types/empresaDevueltaType';
 import { movimientoDevueltoType } from '@/types/movimientosDevueltosType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const verMovimientos = () => {
    const params = useParams();
@@ -20,12 +20,16 @@ const verMovimientos = () => {
       'all'
    );
 
+   const fetchedEmpresa = useRef(false);
+   const fetchedMovimientos = useRef(false);
+
    useEffect(() => {
       const fetchUnaEmpresa = async () => {
          try {
-            if (!id) return;
-            const usuario = await traerEmpresaPorId(Number(id));
-            setUsuario(usuario);
+            if (!id || fetchedEmpresa.current) return;
+            fetchedEmpresa.current = true;
+            const usuarioTraido = await traerEmpresaPorId(Number(id));
+            setUsuario(usuarioTraido);
          } catch (error) {
             console.log(error);
          }
@@ -37,6 +41,14 @@ const verMovimientos = () => {
       if (!id) return;
 
       const fetchMovimientos = async () => {
+         if (
+            fetchedMovimientos.current &&
+            tipo === 'all' &&
+            formaPago === 'all'
+         )
+            return;
+         fetchedMovimientos.current = true;
+
          const res = await listarMovimientosAdmin(Number(id), offset, 15, {
             tipo: tipo === 'all' ? undefined : tipo,
             formaPago: formaPago === 'all' ? undefined : formaPago,

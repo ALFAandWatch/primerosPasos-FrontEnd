@@ -14,11 +14,6 @@ export default function GaleriaLayout({
 
    const router = useRouter();
 
-   const handleLogout = () => {
-      sessionStorage.removeItem('token');
-      router.push('/login');
-   };
-
    return (
       <div className="flex h-screen">
          {/* Sidebar */}

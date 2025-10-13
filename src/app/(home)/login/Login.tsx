@@ -15,15 +15,10 @@ export default function LoginPage() {
    const handleLogin = async (datos: loginType) => {
       try {
          const response = await login(datos);
-         if (response.token) {
-            sessionStorage.setItem('token', response.token);
-            if (response.usuario) {
-               sessionStorage.setItem(
-                  'usuario',
-                  JSON.stringify(response.usuario)
-               );
-               router.push('/home');
-            }
+
+         if (response.usuario) {
+            sessionStorage.setItem('usuario', JSON.stringify(response.usuario));
+            router.push('/home');
          }
       } catch (error) {
          Swal.fire({

@@ -26,15 +26,9 @@ export default function adminLogin() {
             throw new Error('No autorizado');
          }
 
-         if (response.token) {
-            sessionStorage.setItem('token', response.token);
-            if (response.usuario) {
-               sessionStorage.setItem(
-                  'usuario',
-                  JSON.stringify(response.usuario)
-               );
-               router.push('/admin');
-            }
+         if (response.usuario) {
+            sessionStorage.setItem('usuario', JSON.stringify(response.usuario));
+            router.push('/admin');
          }
       } catch (error: any) {
          let message = 'Usuario o contraseña incorrectos. Inténtelo de nuevo.';

@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { logout } from '@/services/logout';
 
 export default function RegistrosLayout({
    children,
@@ -14,9 +15,14 @@ export default function RegistrosLayout({
 
    const router = useRouter();
 
-   const handleLogout = () => {
-      sessionStorage.removeItem('token');
-      router.push('/login');
+   const handleLogout = async () => {
+      try {
+         sessionStorage.removeItem('usuario');
+         await logout();
+         router.push('/login');
+      } catch (error) {
+         console.log(error);
+      }
    };
 
    return (

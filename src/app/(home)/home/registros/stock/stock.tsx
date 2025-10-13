@@ -121,7 +121,7 @@ const stock = () => {
                                              name={`stock.${index}.codigo`}
                                              type="text"
                                              placeholder="Código"
-                                             className={`text-black p-4 text-left font-medium w-46 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                                             className={`text-black p-4 text-left font-medium w-full focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                                                 (
                                                    errors.stock?.[
                                                       index

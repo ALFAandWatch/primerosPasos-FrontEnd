@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Montserrat } from 'next/font/google';
+import { logout } from '@/services/logout';
 
 const montserrat = Montserrat({
    subsets: ['latin'],
@@ -23,6 +24,16 @@ export default function AdminLayout({
    const [open, setOpen] = useState(false);
    const [selected, setSelected] = useState<string | null>(null);
    const router = useRouter();
+
+   const handleLogout = async () => {
+      try {
+         sessionStorage.removeItem('usuario');
+         await logout();
+         router.push('/adminLogin');
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
    return (
       <html lang="es">
@@ -131,6 +142,23 @@ export default function AdminLayout({
                                  Movimientos
                               </Link>
                            </div>
+                           <hr className="my-4 border-gray-300" />
+                           <button
+                              className="flex gap-5 items-center"
+                              onClick={handleLogout}
+                           >
+                              <div className="relative w-7 aspect-square">
+                                 <Image
+                                    src="/icons/logout.svg"
+                                    alt="Mensajes"
+                                    fill
+                                    sizes="10vw"
+                                 />
+                              </div>
+                              <p className="font-semibold hover:text-orange-300 cursor-pointer">
+                                 Cerrar Sesión
+                              </p>
+                           </button>
                         </li>
                      </ul>
                      <hr className="my-4 border-gray-300" />
@@ -148,7 +176,7 @@ export default function AdminLayout({
                         {open ? <X size={28} /> : <Menu size={28} />}
                      </button>
                      <h1 className="ml-4 font-semibold text-lg font-(family-name:--font-montserrat)">
-                        Registros
+                        Admin
                      </h1>
                   </header>
 
