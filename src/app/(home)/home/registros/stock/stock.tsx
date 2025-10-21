@@ -58,7 +58,7 @@ const stock = () => {
 
    return (
       <>
-         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 pb-30">
+         <div className="lg:ml-2 bg-fondo p-6 min-h-[100vh] lg:pr-56 pb-30">
             <h1 className="text-main font-(family-name:--font-montserrat) font-semibold text-2xl pb-6">
                Registro de Stock
             </h1>

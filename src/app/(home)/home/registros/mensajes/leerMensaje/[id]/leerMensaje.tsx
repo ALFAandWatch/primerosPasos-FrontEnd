@@ -49,7 +49,7 @@ const leerMensaje = () => {
 
    return (
       <>
-         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 relative overflow-y-auto flex flex-col gap-6">
+         <div className="lg:ml-2 bg-fondo p-6 min-h-[100vh] lg:pr-56 relative overflow-y-auto flex flex-col gap-6">
             {/* Botón volver */}
             <div className="flex items-center gap-4">
                <button

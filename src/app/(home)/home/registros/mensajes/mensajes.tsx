@@ -61,7 +61,7 @@ const mensajes = () => {
 
    return (
       <>
-         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 relative overflow-y-auto flex flex-col">
+         <div className="lg:ml-2 bg-fondo p-6 min-h-[100vh] lg:pr-56 relative overflow-y-auto flex flex-col">
             <div className="flex justify-end gap-2">
                <div className="bg-main p-5 lg:p-3 py-3 lg:py-1 rounded-md font-bold hidden lg:flex lg:w-fit gap-2 items-center hover:brightness-115 hover:cursor-pointer">
                   <div className="relative h-8 aspect-square">

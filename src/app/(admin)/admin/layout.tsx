@@ -142,6 +142,30 @@ export default function AdminLayout({
                                  Movimientos
                               </Link>
                            </div>
+                        </li>
+                        <li>
+                           <div className="flex gap-5 items-center">
+                              <div className="relative w-7 aspect-square">
+                                 <Image
+                                    src="/icons/files.svg"
+                                    alt="Archivos"
+                                    fill
+                                    sizes="10vw"
+                                 />
+                              </div>
+                              <Link
+                                 href="/admin/archivos"
+                                 onClick={() => {
+                                    setOpen(false);
+                                    setSelected('movimientos');
+                                 }}
+                                 className="font-semibold"
+                              >
+                                 Archivos
+                              </Link>
+                           </div>
+                        </li>
+                        <li>
                            <hr className="my-4 border-gray-300" />
                            <button
                               className="flex gap-5 items-center"

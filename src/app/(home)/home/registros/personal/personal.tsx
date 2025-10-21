@@ -80,8 +80,8 @@ const personal = () => {
       Swal.fire({
          title: '¿Borrar Empleado?',
          html: `
-    ¿Estas seguro que quieres borrar al empleado <span class='text-red-400 font-bold'>${nombre}</span> <span class='text-red-400 font-bold'>${apellido}</span>?
-  <br> Esta accion no es reversible.`,
+            ¿Estas seguro que quieres borrar al empleado <span class='text-red-400 font-bold'>${nombre}</span> <span class='text-red-400 font-bold'>${apellido}</span>?
+            <br> Esta accion no es reversible.`,
          icon: 'warning',
          showCancelButton: true,
          confirmButtonColor: 'oklch(70.4% 0.191 22.216)',

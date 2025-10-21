@@ -33,7 +33,7 @@ export default function RegistrosLayout({
         ${open ? 'translate-x-0' : '-translate-x-full'} 
         lg:translate-x-0 lg:fixed`}
          >
-            <div className="bg-main flex flex-col justify-end p-4 gap-4">
+            <div className="bg-main flex flex-col justify-end items-center p-4 gap-1">
                <div className="h-30 w-30 relative self-center">
                   <Image
                      src="/logo.png"
@@ -43,13 +43,28 @@ export default function RegistrosLayout({
                      priority
                   />
                </div>
-               <h3 className="text-white text-lg font-bold">
+               <h3 className="text-white text-lg font-bold text-center">
                   Módulo de Registro
                </h3>
+               <Link
+                  href="/home"
+                  className=" text-white w-fit text-sm rounded-md flex gap-1 items-center hover:cursor-pointer hover:underline self-end pr-5"
+               >
+                  <div className="h-4 aspect-square relative">
+                     <Image
+                        src="/icons/atras.svg"
+                        alt="Logo"
+                        fill
+                        sizes="20vw"
+                        className="invert"
+                     />
+                  </div>
+                  Volver
+               </Link>
             </div>
             <div className="p-4 text-main">
                <h2 className="font-black text-xl mb-3">Ventas</h2>
-               <ul className="space-y-4">
+               <ul className="space-y-2">
                   <li>
                      <Link
                         href="/home/registros/ventasContado"
@@ -87,7 +102,7 @@ export default function RegistrosLayout({
                </ul>
                <hr className="my-4 border-gray-300" />
                <h2 className="font-black text-xl mb-3">Compras</h2>
-               <ul className="space-y-4">
+               <ul className="space-y-2">
                   <li>
                      <Link
                         href="/home/registros/comprasContado"
@@ -124,7 +139,7 @@ export default function RegistrosLayout({
                   </li>
                </ul>
                <hr className="my-4 border-gray-300" />
-               <ul className="space-y-4">
+               <ul className="space-y-2">
                   <li>
                      <div className="flex gap-5 items-center">
                         <div className="relative w-7 aspect-square">
@@ -219,7 +234,7 @@ export default function RegistrosLayout({
             </header>
 
             {/* Contenido */}
-            <main className="flex-1 bg-gray-50 lg:pl-[15rem] w-screen">
+            <main className="flex-1 bg-gray-50 lg:pl-[15rem] w-screen min-h-[100vh] overflow-y-auto overflow-x-hidden">
                {children}
             </main>
          </div>
