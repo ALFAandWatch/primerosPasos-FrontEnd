@@ -15,15 +15,6 @@ import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-interface Archivo {
-   id: number;
-   nombre: string;
-   url: string;
-   tipo: string;
-   descripcion?: string;
-   fechaSubida: string;
-}
-
 const verArchivos = () => {
    const params = useParams();
    const { id } = params;
@@ -36,7 +27,7 @@ const verArchivos = () => {
       'all' | 'contado' | 'credito' | 'varios' | 'dgi' | 'bps' | 'otros'
    >('all');
    const [archivoSeleccionado, setArchivoSeleccionado] =
-      useState<Archivo | null>(null);
+      useState<archivoDevueltoType | null>(null);
 
    const fetchedEmpresa = useRef(false);
    const fetchedMovimientos = useRef(false);
@@ -243,7 +234,7 @@ const verArchivos = () => {
                               </td>
 
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800 capitalize bg-[#FFF8DC]">
-                                 {archivo.tipo}
+                                 {formatearTipoArchivo(archivo.tipo)}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
                                  <button
@@ -270,7 +261,7 @@ const verArchivos = () => {
                                        />
                                     )}
                                     {archivo.fechaSubida && (
-                                       <p className="text-xs text-black mt-1 absolute top-0 right-1 bg-white p-1 rounded-sm">
+                                       <p className="text-xs text-black mt-1 absolute top-0 right-1 bg-white p-1 rounded-sm pointer-events-none">
                                           {formatearFechaCorta(
                                              new Date(archivo.fechaSubida)
                                           )}
@@ -293,27 +284,9 @@ const verArchivos = () => {
                                  <button
                                     type="button"
                                     onClick={() =>
-                                       handleDescargarArchivo(archivo)
-                                    }
-                                    className="text-white rounded-lg bg-blue-400 flex items-center p-2 px-3 hover:cursor-pointer hover:brightness-115"
-                                 >
-                                    <div className="relative h-7 aspect-square">
-                                       <Image
-                                          src="/icons/download.svg"
-                                          alt=""
-                                          fill
-                                          sizes="10vw"
-                                       />
-                                    </div>
-                                    Descargar
-                                 </button>
-
-                                 <button
-                                    type="button"
-                                    onClick={() =>
                                        handleBorrarArchivo(archivo.id)
                                     }
-                                    className="text-white rounded-lg bg-red-500 flex items-center p-2 px-3 hover:cursor-pointer hover:brightness-95"
+                                    className="text-white rounded-lg bg-red-500 flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-95"
                                  >
                                     <div className="relative h-7 aspect-square">
                                        <Image
@@ -365,18 +338,37 @@ const verArchivos = () => {
                         />
                      )}
 
-                     <p className="text-xl text-gray-700 w-[80%] mx-auto">
-                        Descripción:{' '}
-                        <span className="italic text-gray-400 bg-gray-100 mx-auto shadow-sm min-h-[5rem] h-fit rounded-lg p-5 block my-2">
-                           {archivoSeleccionado.descripcion ||
-                              'Sin descripción'}
-                        </span>
-                     </p>
+                     <button
+                        type="button"
+                        onClick={() =>
+                           handleDescargarArchivo(archivoSeleccionado)
+                        }
+                        className="text-white rounded-lg bg-blue-400 flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-115 mx-auto my-1"
+                     >
+                        <div className="relative h-7 aspect-square">
+                           <Image
+                              src="/icons/download.svg"
+                              alt=""
+                              fill
+                              sizes="10vw"
+                           />
+                        </div>
+                        Descargar
+                     </button>
+                     <hr className="border-gray-300 my-4" />
 
                      <p className="text-gray-700 text-xl text-center">
                         Tipo de archivo:{' '}
                         <span className="text-red-500 italic">
                            {formatearTipoArchivo(archivoSeleccionado.tipo)}
+                        </span>
+                     </p>
+
+                     <p className="text-xl text-gray-700 text-center">
+                        Descripción:{' '}
+                        <span className="italic text-gray-400 mx-auto h-fit rounded-lg block">
+                           {archivoSeleccionado.descripcion ||
+                              'Sin descripción'}
                         </span>
                      </p>
                   </div>

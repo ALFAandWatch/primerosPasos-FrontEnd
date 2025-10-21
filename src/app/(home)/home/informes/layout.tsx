@@ -3,130 +3,158 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { logout } from '@/services/logout';
 
-export default function InformesLayout({
+export default function RegistrosLayout({
    children,
 }: {
    children: React.ReactNode;
 }) {
    const [open, setOpen] = useState(false);
 
+   const router = useRouter();
+
+   const handleLogout = async () => {
+      try {
+         sessionStorage.removeItem('usuario');
+         await logout();
+         router.push('/login');
+      } catch (error) {
+         console.log(error);
+      }
+   };
+
    return (
-      <div className="flex h-screen">
+      <div className="flex h-screen w-screen relative">
          {/* Sidebar */}
          <aside
-            className={`fixed top-0 left-0 h-full w-64 bg-white text-black flex flex-col transform transition-transform duration-300 z-40 font-(family-name:--font-montserrat) font-medium shadow-lg
+            className={`fixed top-0 left-0 h-full w-64 lg:w-[15rem] bg-white text-black flex flex-col transform transition-transform duration-300 z-40 font-(family-name:--font-montserrat) font-medium shadow-lg
         ${open ? 'translate-x-0' : '-translate-x-full'} 
-        md:translate-x-0 md:static`}
+        lg:translate-x-0 lg:fixed`}
          >
-            <div className="bg-main flex flex-col justify-end p-4 gap-4">
+            <div className="bg-main flex flex-col justify-end items-center p-4 gap-1">
                <div className="h-30 w-30 relative self-center">
-                  <Image src="/logo.png" alt="Logo" fill sizes="20vw" />
+                  <Image
+                     src="/logo.png"
+                     alt="Logo"
+                     fill
+                     sizes="20vw"
+                     priority
+                  />
                </div>
-               <h3 className="text-white text-lg font-bold">
+               <h3 className="text-white text-lg font-bold text-center">
                   Módulo de Informes
                </h3>
+               <Link
+                  href="/home"
+                  className=" text-white w-fit text-sm rounded-md flex gap-1 items-center hover:cursor-pointer hover:underline self-end mx-auto"
+               >
+                  <div className="h-4 aspect-square relative">
+                     <Image
+                        src="/icons/atras.svg"
+                        alt="Logo"
+                        fill
+                        sizes="20vw"
+                        className="invert"
+                     />
+                  </div>
+                  Volver
+               </Link>
             </div>
-            <div className="p-4">
-               <h2 className="font-semibold text-xl mb-3">Ventas</h2>
-               <ul className="space-y-4">
+            <div className="p-4 text-main">
+               <ul className="space-y-2">
                   <li>
                      <Link
-                        href=""
-                        className="hover:text-orange-300 cursor-pointer"
+                        href="/home/registros/ventasContado"
+                        onClick={() => setOpen(false)}
+                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
                      >
-                        Contado
-                     </Link>
-                  </li>
-                  <li>
-                     <Link
-                        href=""
-                        className="hover:text-orange-300 cursor-pointer"
-                     >
-                        Crédito
-                     </Link>
-                  </li>
-               </ul>
-               <hr className="my-4 border-gray-300" />
-               <h2 className="font-semibold text-xl mb-3">Compras</h2>
-               <ul className="space-y-4">
-                  <li>
-                     <Link
-                        href=""
-                        className="hover:text-orange-300 cursor-pointer"
-                     >
-                        Contado
-                     </Link>
-                  </li>
-                  <li>
-                     <Link
-                        href=""
-                        className="hover:text-orange-300 cursor-pointer"
-                     >
-                        Crédito
-                     </Link>
-                  </li>
-               </ul>
-               <hr className="my-4 border-gray-300" />
-               <ul className="space-y-4">
-                  <li>
-                     <div className="flex gap-5">
                         <div className="relative w-7 aspect-square">
                            <Image
-                              src="/icons/pagos.svg"
+                              src="/icons/contado.svg"
                               alt="Pagos"
                               fill
                               sizes="10vw"
                            />
                         </div>
-                        <p>Pagos</p>
-                     </div>
+                        Pagos
+                     </Link>
                   </li>
                   <li>
-                     <div className="flex gap-5">
+                     <Link
+                        href="/home/registros/ventasCredito"
+                        onClick={() => setOpen(false)}
+                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
-                              src="/icons/personal.svg"
-                              alt="Personal"
+                              src="/icons/salary.svg"
+                              alt="Pagos"
                               fill
                               sizes="10vw"
                            />
                         </div>
-                        <p>Sueldos</p>
-                     </div>
+                        Sueldos
+                     </Link>
                   </li>
                   <li>
-                     <div className="flex gap-5">
+                     <Link
+                        href="/home/registros/ventasCredito"
+                        onClick={() => setOpen(false)}
+                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/stock.svg"
-                              alt="Stock"
+                              alt="Pagos"
                               fill
                               sizes="10vw"
                            />
                         </div>
-                        <p>Stock</p>
-                     </div>
+                        Stock
+                     </Link>
                   </li>
                   <li>
-                     <div className="flex gap-5">
+                     <Link
+                        href="/home/registros/ventasCredito"
+                        onClick={() => setOpen(false)}
+                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
-                              src="/icons/mensajes.svg"
-                              alt="Mensajes"
+                              src="/icons/balance.svg"
+                              alt="Pagos"
                               fill
                               sizes="10vw"
                            />
                         </div>
-                        <p>Balances</p>
-                     </div>
+                        Balances
+                     </Link>
                   </li>
                </ul>
+               <hr className="my-4 border-gray-300" />
+               <button
+                  className="flex gap-5 items-center"
+                  onClick={handleLogout}
+               >
+                  <div className="relative w-7 aspect-square">
+                     <Image
+                        src="/icons/logout.svg"
+                        alt="Mensajes"
+                        fill
+                        sizes="10vw"
+                     />
+                  </div>
+                  <p className="font-semibold hover:text-orange-300 cursor-pointer">
+                     Cerrar Sesión
+                  </p>
+               </button>
             </div>
          </aside>
 
          {/* Contenido principal */}
-         <div className="flex-1 flex flex-col">
+         <div className="flex-1 flex flex-col h-full">
             {/* Header con botón hamburguesa */}
             <header className="w-full p-4 bg-main flex items-center md:hidden">
                <button
@@ -136,12 +164,14 @@ export default function InformesLayout({
                   {open ? <X size={28} /> : <Menu size={28} />}
                </button>
                <h1 className="ml-4 font-semibold text-lg font-(family-name:--font-montserrat)">
-                  Informes
+                  Registros
                </h1>
             </header>
 
             {/* Contenido */}
-            <main className="flex-1 bg-gray-50">{children}</main>
+            <main className="flex-1 bg-gray-50 lg:pl-[15rem] w-screen min-h-[100vh] overflow-y-auto overflow-x-hidden">
+               {children}
+            </main>
          </div>
 
          {/* Overlay en mobile */}

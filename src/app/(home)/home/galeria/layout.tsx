@@ -101,44 +101,6 @@ export default function RegistrosLayout({
                   </li>
                </ul>
                <hr className="my-4 border-gray-300" />
-               <h2 className="font-black text-xl mb-3">Ver Archivo</h2>
-               <ul className="space-y-2">
-                  <li>
-                     <Link
-                        href="/home/galeria/verContado"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
-                     >
-                        <div className="relative w-7 aspect-square">
-                           <Image
-                              src="/icons/contado.svg"
-                              alt="Pagos"
-                              fill
-                              sizes="10vw"
-                           />
-                        </div>
-                        Contado
-                     </Link>
-                  </li>
-                  <li>
-                     <Link
-                        href="/home"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
-                     >
-                        <div className="relative w-7 aspect-square">
-                           <Image
-                              src="/icons/credito.svg"
-                              alt="Pagos"
-                              fill
-                              sizes="10vw"
-                           />
-                        </div>
-                        Crédito
-                     </Link>
-                  </li>
-               </ul>
-               <hr className="my-4 border-gray-300" />
                <h2 className="font-black text-xl mb-3">Recibos de Sueldo</h2>
                <ul className="space-y-2">
                   <li>

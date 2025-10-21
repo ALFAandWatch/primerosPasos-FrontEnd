@@ -7,9 +7,9 @@ export const formatearTipoArchivo = (tipo: string) => {
       case 'varios':
          return 'Recibos de Pago Varios';
       case 'dgi':
-         return 'DGI';
+         return 'Pagos DGI';
       case 'bps':
-         return 'BPS';
+         return 'Pagos BPS';
       case 'otros':
          return 'Otros recibos';
       default:

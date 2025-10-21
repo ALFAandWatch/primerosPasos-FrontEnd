@@ -48,7 +48,7 @@ export default function RegistrosLayout({
                </h3>
                <Link
                   href="/home"
-                  className=" text-white w-fit text-sm rounded-md flex gap-1 items-center hover:cursor-pointer hover:underline self-end pr-5"
+                  className=" text-white w-fit text-sm rounded-md flex gap-1 items-center hover:cursor-pointer hover:underline self-end mx-auto"
                >
                   <div className="h-4 aspect-square relative">
                      <Image
