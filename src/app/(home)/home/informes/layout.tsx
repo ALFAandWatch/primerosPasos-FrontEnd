@@ -66,7 +66,7 @@ export default function RegistrosLayout({
                <ul className="space-y-2">
                   <li>
                      <Link
-                        href="/home/registros/ventasContado"
+                        href="/home/informes/pagos"
                         onClick={() => setOpen(false)}
                         className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
                      >
@@ -83,7 +83,7 @@ export default function RegistrosLayout({
                   </li>
                   <li>
                      <Link
-                        href="/home/registros/ventasCredito"
+                        href="/home/informes/sueldos"
                         onClick={() => setOpen(false)}
                         className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
                      >
@@ -100,7 +100,7 @@ export default function RegistrosLayout({
                   </li>
                   <li>
                      <Link
-                        href="/home/registros/ventasCredito"
+                        href="/home/informes/stock"
                         onClick={() => setOpen(false)}
                         className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
                      >
@@ -117,7 +117,7 @@ export default function RegistrosLayout({
                   </li>
                   <li>
                      <Link
-                        href="/home/registros/ventasCredito"
+                        href="/home/informes/balances"
                         onClick={() => setOpen(false)}
                         className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
                      >

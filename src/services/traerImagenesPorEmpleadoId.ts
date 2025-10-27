@@ -2,7 +2,7 @@ import axiosInstance from '@/api/axiosInstance';
 
 export const traerImagenesPorEmpleadoId = async (
    empleadoId: number,
-   tipo: string
+   tipo: string | undefined
 ) => {
    try {
       let url = `archivos/obtenerImagenesFiltros/${empleadoId}`;

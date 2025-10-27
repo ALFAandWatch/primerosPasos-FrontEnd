@@ -13,33 +13,26 @@ interface Archivo {
 
 interface VerUploadsProps {
    tipo: string | undefined;
-   imagenSubida: boolean;
+   destinatarioId: number;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 
-const VerUploads = ({ tipo, imagenSubida }: VerUploadsProps) => {
+const VerInformes = ({ tipo, destinatarioId }: VerUploadsProps) => {
    const [archivos, setArchivos] = useState<Archivo[]>([]);
    const [usuario, setUsuario] = useState<{ id: number } | null>(null);
    const [archivoSeleccionado, setArchivoSeleccionado] =
       useState<Archivo | null>(null);
 
    useEffect(() => {
-      const stored = sessionStorage.getItem('usuario');
-      if (stored) {
-         setUsuario(JSON.parse(stored));
-      }
-   }, []);
-
-   useEffect(() => {
       const fetchArchivos = async () => {
-         if (!usuario || !usuario.id) return;
+         if (!destinatarioId) return;
 
          try {
-            const res = await traerImagenesPorEmpleadoId(usuario.id, tipo);
+            const res = await traerImagenesPorEmpleadoId(destinatarioId, tipo);
 
             const enviadosPorUsuario = res.data.filter(
-               (archivo: any) => archivo.remitente.id === usuario.id
+               (archivo: any) => archivo.destinatario.id === destinatarioId
             );
 
             setArchivos(enviadosPorUsuario);
@@ -49,7 +42,7 @@ const VerUploads = ({ tipo, imagenSubida }: VerUploadsProps) => {
       };
 
       fetchArchivos();
-   }, [usuario, tipo, imagenSubida]);
+   }, [usuario, tipo]);
 
    if (archivos.length === 0) {
       return (
@@ -141,4 +134,4 @@ const VerUploads = ({ tipo, imagenSubida }: VerUploadsProps) => {
    );
 };
 
-export default VerUploads;
+export default VerInformes;

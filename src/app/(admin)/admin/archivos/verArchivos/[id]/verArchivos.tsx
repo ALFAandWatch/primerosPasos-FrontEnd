@@ -9,6 +9,7 @@ import { empresaDevueltaType } from '@/types/empresaDevueltaType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
 import { formatearTipoArchivo } from '@/utils/formatearTipoArchivo';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -47,15 +48,20 @@ const verArchivos = () => {
    }, []);
 
    useEffect(() => {
-      if (!id) return;
+      if (!id || !usuario || !usuario.id) return;
 
       const fetchArchivos = async () => {
-         const res = await traerImagenesPorEmpleadoId(Number(id), tipo);
-         setArchivos(res.data);
+         const res = await traerImagenesPorEmpleadoId(usuario.id, tipo);
+
+         const enviadosPorUsuario = res.data.filter(
+            (archivo: any) => archivo.remitente.id === usuario.id
+         );
+
+         setArchivos(enviadosPorUsuario);
       };
 
       fetchArchivos();
-   }, [id, tipo, archivoEliminado]);
+   }, [id, tipo, archivoEliminado, usuario]);
 
    const handleChangeTipo = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedTipo = e.target.value as
@@ -149,13 +155,20 @@ const verArchivos = () => {
    return (
       <>
          <div className="p-6 bg-[#d6dfe7] min-h-screen">
-            <h2 className="text-2xl font-bold text-[#5c7cab] mb-6">
+            <h1 className="text-2xl font-bold text-[#5c7cab] mb-6">
                Archivos de {usuario?.nombreEmpresa}
-            </h2>
+            </h1>
+            <p className="text-xl text-[#5c7cab] mb-6">
+               En esta sección puedes visualizar todos los archivos que este
+               usuario ha enviado, incluyendo imágenes, documentos y
+               formularios. Desde aquí puedes revisarlos, descargarlos o
+               eliminarlos si es necesario.
+            </p>
+            <hr className="my-4 border-gray-400" />
 
             <div className="flex flex-col lg:flex-row justify-start gap-4 mb-4 max-w-full">
                <div className="flex">
-                  <p className="font-semibold w-3/7 px-2 lg:max-w-fit text-center border border-white bg-main py-4 lg:p-2 lg:px-6 text-white font-(family-name:--font-montserrat) flex items-center justify-center">
+                  <p className="font-semibold px-2 text-center border border-white bg-main py-4 lg:p-2 lg:px-6 text-white font-(family-name:--font-montserrat) flex items-center justify-center">
                      Tipo
                   </p>
                   <select
@@ -172,7 +185,7 @@ const verArchivos = () => {
                   </select>
                </div>
                <div className="flex">
-                  <p className="font-semibold w-3/7 px-2 lg:max-w-fit text-center border border-white bg-main py-4 lg:p-2 lg:px-6 text-white font-(family-name:--font-montserrat) flex items-center justify-center whitespace-nowrap">
+                  <p className="font-semibold px-2 text-center border border-white bg-main py-4 lg:p-2 lg:px-6 text-white font-(family-name:--font-montserrat) flex items-center justify-center whitespace-nowrap">
                      Forma de Pago
                   </p>
                   <select
@@ -184,6 +197,12 @@ const verArchivos = () => {
                      <option value="credito">Crédito</option>
                   </select>
                </div>
+               <Link
+                  href={`/admin/archivos/enviarArchivo/${usuario?.id}`}
+                  className="bg-main w-fit p-2 px-4 ml-auto rounded-md font-semibold text-white font-(family-name:--font-montserrat) lg:px-6 hover:cursor-pointer hover:brightness-115"
+               >
+                  Enviar archivo a {usuario?.nombreEmpresa}
+               </Link>
             </div>
 
             <div className="overflow-x-auto shadow-lg rounded-lg">
