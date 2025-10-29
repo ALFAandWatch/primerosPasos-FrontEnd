@@ -12,6 +12,7 @@ export default function RegistrosLayout({
    children: React.ReactNode;
 }) {
    const [open, setOpen] = useState(false);
+   const [selected, setSelected] = useState(1);
 
    const router = useRouter();
 
@@ -62,14 +63,19 @@ export default function RegistrosLayout({
                   Volver
                </Link>
             </div>
-            <div className="p-4 text-main">
-               <h2 className="font-black text-xl mb-3">Ventas</h2>
+            <div className="text-main">
+               <h2 className="p-2 pl-4 font-black text-xl mb-3">Ventas</h2>
                <ul className="space-y-2">
                   <li>
                      <Link
                         href="/home/registros/ventasContado"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(1);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 1 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -85,8 +91,13 @@ export default function RegistrosLayout({
                   <li>
                      <Link
                         href="/home/registros/ventasCredito"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(2);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 2 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -100,14 +111,19 @@ export default function RegistrosLayout({
                      </Link>
                   </li>
                </ul>
-               <hr className="my-4 border-gray-300" />
-               <h2 className="font-black text-xl mb-3">Compras</h2>
+               <hr className="my-2 border-gray-300" />
+               <h2 className="p-2 pl-4 font-black text-xl mb-3">Compras</h2>
                <ul className="space-y-2">
                   <li>
                      <Link
                         href="/home/registros/comprasContado"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(3);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 3 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -123,8 +139,13 @@ export default function RegistrosLayout({
                   <li>
                      <Link
                         href="/home/registros/comprasCredito"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(4);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 4 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -138,10 +159,14 @@ export default function RegistrosLayout({
                      </Link>
                   </li>
                </ul>
-               <hr className="my-4 border-gray-300" />
+               <hr className="my-2 border-gray-300" />
                <ul className="space-y-2">
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 5 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/personal.svg"
@@ -152,7 +177,10 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/registros/personal"
-                           onClick={() => setOpen(false)}
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(5);
+                           }}
                            className="font-semibold hover:text-orange-300 cursor-pointer"
                         >
                            Personal
@@ -160,7 +188,11 @@ export default function RegistrosLayout({
                      </div>
                   </li>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 6 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/stock.svg"
@@ -171,7 +203,10 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/registros/stock"
-                           onClick={() => setOpen(false)}
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(6);
+                           }}
                            className="font-semibold hover:text-orange-300 cursor-pointer"
                         >
                            Stock
@@ -179,7 +214,11 @@ export default function RegistrosLayout({
                      </div>
                   </li>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 7 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/mensajes.svg"
@@ -190,7 +229,10 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/registros/mensajes"
-                           onClick={() => setOpen(false)}
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(7);
+                           }}
                            className="font-semibold hover:text-orange-300 cursor-pointer"
                         >
                            Mensajes
@@ -198,9 +240,9 @@ export default function RegistrosLayout({
                      </div>
                   </li>
                </ul>
-               <hr className="my-4 border-gray-300" />
+               <hr className="my-2 border-gray-300" />
                <button
-                  className="flex gap-5 items-center"
+                  className="p-2 pl-4 flex gap-5 items-center"
                   onClick={handleLogout}
                >
                   <div className="relative w-7 aspect-square">

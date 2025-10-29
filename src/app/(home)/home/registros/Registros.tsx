@@ -1,4 +1,13 @@
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 const Registros = () => {
+   const router = useRouter();
+   useEffect(() => {
+      router.push('/home/registros/ventasContado');
+   }, [router]);
+
    return (
       <>
          <div className=" p-4 bg-white h-screen">

@@ -1,4 +1,13 @@
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 const Galeria = () => {
+   const router = useRouter();
+   useEffect(() => {
+      router.push('/home/galeria/contado');
+   }, [router]);
+
    return (
       <>
          <div className="p-4 bg-white h-screen">

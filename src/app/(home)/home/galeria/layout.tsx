@@ -12,6 +12,7 @@ export default function RegistrosLayout({
    children: React.ReactNode;
 }) {
    const [open, setOpen] = useState(false);
+   const [selected, setSelected] = useState(1);
 
    const router = useRouter();
 
@@ -62,14 +63,21 @@ export default function RegistrosLayout({
                   Volver
                </Link>
             </div>
-            <div className="p-4 text-main">
-               <h2 className="font-black text-lg mb-3">Cargar Documentos</h2>
-               <ul className="space-y-2">
+            <div className="text-main">
+               <h2 className="p-2 pl-4 font-black text-lg">
+                  Cargar Documentos
+               </h2>
+               <ul>
                   <li>
                      <Link
                         href="/home/galeria/contado"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(1);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 1 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -85,8 +93,13 @@ export default function RegistrosLayout({
                   <li>
                      <Link
                         href="/home/galeria/credito"
-                        onClick={() => setOpen(false)}
-                        className="hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center"
+                        onClick={() => {
+                           setOpen(false);
+                           setSelected(2);
+                        }}
+                        className={`p-2 pl-4 hover:text-orange-300 cursor-pointer font-semibold flex gap-4 items-center ${
+                           selected === 2 ? 'bg-amber-200/60' : ''
+                        }`}
                      >
                         <div className="relative w-7 aspect-square">
                            <Image
@@ -100,11 +113,17 @@ export default function RegistrosLayout({
                      </Link>
                   </li>
                </ul>
-               <hr className="my-4 border-gray-300" />
-               <h2 className="font-black text-xl mb-3">Recibos de Sueldo</h2>
-               <ul className="space-y-2">
+               <hr className="my-2 border-gray-300" />
+               <h2 className="p-2 pl-4 font-black text-xl">
+                  Recibos de Sueldo
+               </h2>
+               <ul>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 3 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/personal.svg"
@@ -115,15 +134,22 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/galeria/recibosVarios"
-                           onClick={() => setOpen(false)}
-                           className="font-semibold hover:text-orange-300 cursor-pointer"
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(3);
+                           }}
+                           className={`font-semibold hover:text-orange-300 cursor-pointer`}
                         >
                            Recibos Varios
                         </Link>
                      </div>
                   </li>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 4 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/stock.svg"
@@ -134,15 +160,22 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/galeria/recibosDGI"
-                           onClick={() => setOpen(false)}
-                           className="font-semibold hover:text-orange-300 cursor-pointer"
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(4);
+                           }}
+                           className={`font-semibold hover:text-orange-300 cursor-pointer`}
                         >
                            Recibos DGI
                         </Link>
                      </div>
                   </li>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 5 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/mensajes.svg"
@@ -153,15 +186,22 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/galeria/recibosBPS"
-                           onClick={() => setOpen(false)}
-                           className="font-semibold hover:text-orange-300 cursor-pointer"
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(5);
+                           }}
+                           className={`font-semibold hover:text-orange-300 cursor-pointer`}
                         >
                            Recibos BPS
                         </Link>
                      </div>
                   </li>
                   <li>
-                     <div className="flex gap-5 items-center">
+                     <div
+                        className={`p-2 pl-4 flex gap-5 items-center ${
+                           selected === 6 ? 'bg-amber-200/60' : ''
+                        }`}
+                     >
                         <div className="relative w-7 aspect-square">
                            <Image
                               src="/icons/mensajes.svg"
@@ -172,17 +212,20 @@ export default function RegistrosLayout({
                         </div>
                         <Link
                            href="/home/galeria/otros"
-                           onClick={() => setOpen(false)}
-                           className="font-semibold hover:text-orange-300 cursor-pointer"
+                           onClick={() => {
+                              setOpen(false);
+                              setSelected(6);
+                           }}
+                           className={`font-semibold hover:text-orange-300 cursor-pointer`}
                         >
                            Otros Pagos
                         </Link>
                      </div>
                   </li>
                </ul>
-               <hr className="my-4 border-gray-300" />
+               <hr className="my-2 border-gray-300" />
                <button
-                  className="flex gap-5 items-center"
+                  className="p-2 pl-4 flex gap-5 items-center"
                   onClick={handleLogout}
                >
                   <div className="relative w-7 aspect-square">
