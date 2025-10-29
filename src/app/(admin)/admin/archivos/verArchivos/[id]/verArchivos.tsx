@@ -31,7 +31,6 @@ const verArchivos = () => {
       useState<archivoDevueltoType | null>(null);
 
    const fetchedEmpresa = useRef(false);
-   const fetchedMovimientos = useRef(false);
 
    useEffect(() => {
       const fetchUnaEmpresa = async () => {
@@ -184,19 +183,6 @@ const verArchivos = () => {
                      <option value="otros">Otros Recibos</option>
                   </select>
                </div>
-               <div className="flex">
-                  <p className="font-semibold px-2 text-center border border-white bg-main py-4 lg:p-2 lg:px-6 text-white font-(family-name:--font-montserrat) flex items-center justify-center whitespace-nowrap">
-                     Forma de Pago
-                  </p>
-                  <select
-                     // onChange={handleChangeFormaPago}
-                     className="w-[10rem] text-black font-medium bg-[#FFF8DC] p-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-400 font-(family-name:--font-montserrat)"
-                  >
-                     <option value="all">Todos</option>
-                     <option value="contado">Contado</option>
-                     <option value="credito">Crédito</option>
-                  </select>
-               </div>
                <Link
                   href={`/admin/archivos/enviarArchivo/${usuario?.id}`}
                   className="bg-main w-fit p-2 px-4 ml-auto rounded-md font-semibold text-white font-(family-name:--font-montserrat) lg:px-6 hover:cursor-pointer hover:brightness-115"
@@ -210,24 +196,15 @@ const verArchivos = () => {
                   <thead className="bg-[#5c7cab]/20">
                      <tr>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Id
-                        </th>
-                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Tipo
-                        </th>
-                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
                            Imagen
                         </th>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Nombre
+                           Título
                         </th>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Url
+                           Descripción
                         </th>
-                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Fecha de Subida
-                        </th>
-                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
+                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase w-1/6">
                            Acciones
                         </th>
                      </tr>
@@ -248,13 +225,6 @@ const verArchivos = () => {
                               key={archivo.id}
                               className="hover:bg-[#5c7cab]/10 transition-colors duration-200 h-fit"
                            >
-                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800 whitespace-nowrap">
-                                 #{` ${archivo.id}`}
-                              </td>
-
-                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800 capitalize bg-[#FFF8DC]">
-                                 {formatearTipoArchivo(archivo.tipo)}
-                              </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
                                  <button
                                     key={archivo.id}
@@ -289,17 +259,12 @@ const verArchivos = () => {
                                  </button>
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {archivo.nombre}
+                                 {archivo.titulo}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {archivo.url}
+                                 {archivo.descripcion}
                               </td>
-                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {formatearFechaCorta(
-                                    new Date(archivo.fechaSubida)
-                                 )}
-                              </td>
-                              <td className="py-8 px-4 border-b border-gray-300 text-gray-800 flex items-center gap-4 min-h-[6rem]">
+                              <td className="lg:py-8 py-15 px-4 border-b border-gray-300 text-gray-800 flex items-center gap-4 min-h-[6rem]">
                                  <button
                                     type="button"
                                     onClick={() =>

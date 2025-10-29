@@ -31,16 +31,13 @@ const archivos = () => {
                   <thead className="bg-[#5c7cab]/20">
                      <tr>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Id
-                        </th>
-                        <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
                            Empresa
                         </th>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Rut
+                           Titular
                         </th>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
-                           Titular
+                           Rut
                         </th>
                         <th className="py-3 px-4 text-left text-[#5c7cab] font-semibold uppercase">
                            Email del titular
@@ -67,16 +64,13 @@ const archivos = () => {
                               className="w-full hover:bg-[#5c7cab]/10 transition-colors duration-200"
                            >
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 #{` ${empresa.id}`}
-                              </td>
-                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
                                  {empresa.nombreEmpresa}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {empresa.rut}
+                                 {empresa.nombreTitular}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {empresa.nombreTitular}
+                                 {empresa.rut}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
                                  {empresa.credencial.email}

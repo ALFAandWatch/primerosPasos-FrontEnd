@@ -28,10 +28,7 @@ const sueldos = () => {
                asegurarte de que toda la información esté actualizada.
             </p>
             {/* VER IMAGENES */}
-            <div
-               className="p-6 w-full border-2 border-main rounded-xl shadow-md mb-15 lg:mb-0 mt-10"
-               style={{ borderStyle: 'groove' }}
-            >
+            <div className="w-full rounded-md mb-15 lg:mb-0 mt-10">
                {usuario && usuario.id && (
                   <VerInformes tipo={tipo} destinatarioId={usuario.id} />
                )}
