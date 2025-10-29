@@ -49,7 +49,7 @@ const leerMensajeAdmin = () => {
 
    return (
       <>
-         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 relative overflow-y-auto flex flex-col gap-6">
+         <div className="lg:ml-2 bg-fondo p-6 h-full lg:pr-56 relative overflow-y-auto flex flex-col gap-3">
             {/* Botón volver */}
             <div className="flex items-center gap-4">
                <button
@@ -62,6 +62,11 @@ const leerMensajeAdmin = () => {
                <h1 className="text-xl lg:text-2xl font-semibold text-main">
                   Mensaje
                </h1>
+            </div>
+            <div className="flex justify-end">
+               <button className="bg-main text-white p-3 px-4 rounded-lg">
+                  Responder
+               </button>
             </div>
 
             {/* Contenedor del mensaje */}

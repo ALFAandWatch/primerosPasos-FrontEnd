@@ -185,10 +185,10 @@ export default function AdminLayout({
                               </Link>
                            </div>
                         </li>
+                        <hr className="my-2 border-gray-300" />
                         <li>
-                           <hr className="my-2 border-gray-300" />
                            <button
-                              className="flex gap-5 items-center"
+                              className="p-2 pl-4 flex gap-5 items-center"
                               onClick={handleLogout}
                            >
                               <div className="relative w-7 aspect-square">
