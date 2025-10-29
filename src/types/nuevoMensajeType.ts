@@ -3,4 +3,5 @@ export type nuevoMensajeType = {
    contenido: string;
    remitenteId: number | 'admin';
    destinatarioId: number | 'admin';
+   mensajePadreId?: number;
 };

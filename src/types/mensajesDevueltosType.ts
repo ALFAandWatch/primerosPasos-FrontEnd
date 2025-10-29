@@ -23,4 +23,5 @@ export type mensajesDevueltosType = {
    destinatario: usuarioType;
    fechaEnvio: Date;
    leido: boolean;
+   mensajePadre?: mensajesDevueltosType;
 };

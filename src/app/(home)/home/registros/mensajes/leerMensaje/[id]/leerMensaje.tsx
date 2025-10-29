@@ -65,7 +65,7 @@ const leerMensaje = () => {
             </div>
 
             {/* Contenedor del mensaje */}
-            <div className="flex-1 bg-white rounded-lg shadow-md p-6 flex flex-col gap-4">
+            <div className="flex-1 bg-white rounded-lg shadow-md p-6 flex flex-col justify-start gap-4">
                {/* Asunto */}
                <h2 className="text-xl lg:text-3xl font-bold text-main truncate">
                   {mensaje?.asunto ? (
@@ -96,9 +96,28 @@ const leerMensaje = () => {
                </div>
 
                {/* Cuerpo del mensaje */}
-               <div className="whitespace-pre-wrap text-gray-600 text-md flex-1">
+               <div className="whitespace-pre-wrap text-gray-600 text-md">
                   {mensaje?.contenido}
                </div>
+
+               {/* Mensaje padre */}
+               {mensaje?.mensajePadre && (
+                  <div className="bg-gray-100 rounded-lg shadow-inner p-4 text-sm text-gray-500 italic border-l-4 border-gray-400">
+                     <span className="font-semibold">
+                        {mensaje.mensajePadre.remitente.nombreTitular} escribió:
+                     </span>
+                     <div className="whitespace-pre-wrap mt-1">
+                        {mensaje.mensajePadre.contenido}
+                     </div>
+                     <div className="text-xs text-gray-400 mt-1">
+                        {mensaje.mensajePadre.fechaEnvio
+                           ? formatearFechaCorta(
+                                new Date(mensaje.mensajePadre.fechaEnvio)
+                             )
+                           : ''}
+                     </div>
+                  </div>
+               )}
             </div>
          </div>
       </>
