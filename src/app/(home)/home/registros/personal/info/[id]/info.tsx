@@ -42,7 +42,7 @@ const horarios = () => {
       nombre: empleado?.nombre ?? '',
       apellido: empleado?.apellido ?? '',
       cedula: empleado?.cedula ?? '',
-      empresaId: empleado?.empresa?.id ?? 0,
+      usuarioId: empleado?.usuario?.id ?? 0,
    };
 
    const initialValuesHorario = {
@@ -188,7 +188,6 @@ const horarios = () => {
                      selected={fecha}
                      onChange={(date) => handleCambiarFecha(date)}
                      dateFormat="dd/MM/yyyy"
-                     maxDate={new Date()}
                      className="border-2 border-yellow-600/30 text-black bg-[#FFF0B3] font-bold text-center p-2"
                   />
                </div>

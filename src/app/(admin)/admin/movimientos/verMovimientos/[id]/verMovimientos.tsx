@@ -1,11 +1,14 @@
 'use client';
+import { borrarMovimiento } from '@/services/borrarMovimiento';
 import { listarMovimientosAdmin } from '@/services/listarMovimientosAdmin';
 import { traerEmpresaPorId } from '@/services/traerEmpresaPorId';
 import { empresaDevueltaType } from '@/types/empresaDevueltaType';
 import { movimientoDevueltoType } from '@/types/movimientosDevueltosType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const verMovimientos = () => {
    const params = useParams();
@@ -13,6 +16,7 @@ const verMovimientos = () => {
 
    const [usuario, setUsuario] = useState<empresaDevueltaType>();
    const [movimientos, setMovimientos] = useState<movimientoDevueltoType[]>([]);
+   const [movimientoBorrado, setMovimientoBorrado] = useState(false);
    const [offset, setOffset] = useState(0);
    const [hasMore, setHasMore] = useState(true);
    const [tipo, setTipo] = useState<'all' | 'compra' | 'venta'>('all');
@@ -59,13 +63,14 @@ const verMovimientos = () => {
       };
 
       fetchMovimientos();
-   }, [id, tipo, formaPago]);
+   }, [id, tipo, formaPago, movimientoBorrado]);
 
    const handleChangeTipo = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedTipo = e.target.value as 'all' | 'compra' | 'venta';
       setTipo(selectedTipo);
       setOffset(0);
       setMovimientos([]);
+      fetchedMovimientos.current = false;
    };
 
    const handleChangeFormaPago = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -73,6 +78,64 @@ const verMovimientos = () => {
       setFormaPago(selectedFormaPago);
       setOffset(0);
       setMovimientos([]);
+      fetchedMovimientos.current = false;
+   };
+
+   const handleBorrarMovimiento = async (id: number) => {
+      try {
+         Swal.fire({
+            title: '¿Borrar Movimiento?',
+            html: `
+                        ¿Estas seguro que quieres borrar el movimiento?
+                        <br> Esta accion no es reversible.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'oklch(70.4% 0.191 22.216)',
+            cancelButtonColor: '#99a1af',
+            confirmButtonText: 'Borrar',
+            cancelButtonText: 'Cancelar',
+            didOpen: () => {
+               // Seleccionamos el botón de confirmar
+               const confirmButton = Swal.getConfirmButton();
+               if (confirmButton) {
+                  confirmButton.disabled = true;
+
+                  let segundos = 5; // tiempo que quieras
+                  confirmButton.textContent = `Borrar (${segundos})`;
+
+                  const interval = setInterval(() => {
+                     segundos--;
+                     if (segundos > 0) {
+                        confirmButton.textContent = `Borrar (${segundos})`;
+                     } else {
+                        confirmButton.textContent = 'Borrar';
+                        confirmButton.disabled = false;
+                        clearInterval(interval);
+                     }
+                  }, 1000);
+               }
+            },
+         }).then(async (result) => {
+            if (result.isConfirmed) {
+               try {
+                  await borrarMovimiento(id);
+                  setMovimientoBorrado(true);
+                  setTimeout(() => {
+                     setMovimientoBorrado(false);
+                  }, 500);
+                  Swal.fire({
+                     title: 'Archivo borrado!',
+                     icon: 'success',
+                  });
+               } catch (error) {
+                  Swal.fire({
+                     title: 'No se pudo borrar el archivo.',
+                     icon: 'error',
+                  });
+               }
+            }
+         });
+      } catch (error) {}
    };
 
    // useEffect(() => {
@@ -189,10 +252,27 @@ const verMovimientos = () => {
                                     new Date(movimiento.fecha)
                                  )}
                               </td>
-                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800">
-                                 {/* <button className="text-blue-500 hover:underline">
+                              <td className="py-3 px-4 border-b border-gray-300 text-gray-800 flex gap-2">
+                                 <button className="text-white rounded-lg bg-main flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-115">
                                     Editar
-                                 </button> */}
+                                 </button>
+                                 <button
+                                    type="button"
+                                    onClick={() =>
+                                       handleBorrarMovimiento(movimiento.id)
+                                    }
+                                    className="text-white rounded-lg bg-red-500 flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-95"
+                                 >
+                                    <div className="relative h-7 aspect-square">
+                                       <Image
+                                          src="/icons/delete.svg"
+                                          alt=""
+                                          fill
+                                          sizes="10vw"
+                                       />
+                                    </div>
+                                    Eliminar
+                                 </button>
                               </td>
                            </tr>
                         ))
