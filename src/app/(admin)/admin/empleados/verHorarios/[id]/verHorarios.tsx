@@ -1,9 +1,8 @@
 'use client';
-import { traerEmpresaPorId } from '@/services/traerEmpresaPorId';
+
 import { traerHorariosPorEmpleadoId } from '@/services/traerHorariosPorEmpleadoId';
 import { traerEmpleadoPorId } from '@/services/treaerEmpleadoPorId';
 import { empleadoDevueltoType } from '@/types/empleadoDevueltoType';
-import { empresaDevueltaType } from '@/types/empresaDevueltaType';
 import { horarioDevueltoType } from '@/types/horarioDevueltoType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
 import { useParams } from 'next/navigation';
@@ -88,7 +87,9 @@ const verHorarios = () => {
                               <td
                                  className={`py-3 px-4 border-b border-gray-300 text-gray-800 capitalize ${
                                     horario.estado === 'presente'
-                                       ? 'text-green-700 italic'
+                                       ? 'text-green-700 bg-green-50'
+                                       : horario.estado === 'libre'
+                                       ? 'text-gray-400 bg-gray-100'
                                        : 'text-red-500 bg-red-50'
                                  }`}
                               >

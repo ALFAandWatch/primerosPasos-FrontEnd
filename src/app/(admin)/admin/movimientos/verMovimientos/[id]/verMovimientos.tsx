@@ -1,10 +1,14 @@
 'use client';
 import { borrarMovimiento } from '@/services/borrarMovimiento';
+import { editarMovimiento } from '@/services/editarMovimiento';
 import { listarMovimientosAdmin } from '@/services/listarMovimientosAdmin';
 import { traerEmpresaPorId } from '@/services/traerEmpresaPorId';
+import { movimientoEditType } from '@/types/editarMovimientoType';
 import { empresaDevueltaType } from '@/types/empresaDevueltaType';
 import { movimientoDevueltoType } from '@/types/movimientosDevueltosType';
+import { exportarExcel } from '@/utils/exportarExcel';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -17,12 +21,14 @@ const verMovimientos = () => {
    const [usuario, setUsuario] = useState<empresaDevueltaType>();
    const [movimientos, setMovimientos] = useState<movimientoDevueltoType[]>([]);
    const [movimientoBorrado, setMovimientoBorrado] = useState(false);
-   const [offset, setOffset] = useState(0);
-   const [hasMore, setHasMore] = useState(true);
    const [tipo, setTipo] = useState<'all' | 'compra' | 'venta'>('all');
    const [formaPago, setFormaPago] = useState<'all' | 'contado' | 'credito'>(
       'all'
    );
+   const [verModalEditar, setVerModalEditar] = useState(false);
+   const [movimientoAEditar, setMovimientoAEditar] =
+      useState<movimientoDevueltoType | null>(null);
+   const [movimientoEditado, setMovimientoEditado] = useState(false);
 
    const fetchedEmpresa = useRef(false);
    const fetchedMovimientos = useRef(false);
@@ -53,22 +59,19 @@ const verMovimientos = () => {
             return;
          fetchedMovimientos.current = true;
 
-         const res = await listarMovimientosAdmin(Number(id), offset, 15, {
+         const res = await listarMovimientosAdmin(Number(id), {
             tipo: tipo === 'all' ? undefined : tipo,
             formaPago: formaPago === 'all' ? undefined : formaPago,
          });
          setMovimientos((prev) => [...prev, ...res.data.items]);
-         setHasMore(res.hasMore);
-         setOffset((prev) => prev + 15);
       };
 
       fetchMovimientos();
-   }, [id, tipo, formaPago, movimientoBorrado]);
+   }, [id, tipo, formaPago, movimientoBorrado, movimientoEditado]);
 
    const handleChangeTipo = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedTipo = e.target.value as 'all' | 'compra' | 'venta';
       setTipo(selectedTipo);
-      setOffset(0);
       setMovimientos([]);
       fetchedMovimientos.current = false;
    };
@@ -76,7 +79,6 @@ const verMovimientos = () => {
    const handleChangeFormaPago = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedFormaPago = e.target.value as 'all' | 'contado' | 'credito';
       setFormaPago(selectedFormaPago);
-      setOffset(0);
       setMovimientos([]);
       fetchedMovimientos.current = false;
    };
@@ -120,22 +122,47 @@ const verMovimientos = () => {
                try {
                   await borrarMovimiento(id);
                   setMovimientoBorrado(true);
+                  fetchedMovimientos.current = false;
+                  setMovimientos([]);
                   setTimeout(() => {
                      setMovimientoBorrado(false);
                   }, 500);
                   Swal.fire({
-                     title: 'Archivo borrado!',
+                     title: 'Movimiento borrado!',
                      icon: 'success',
                   });
                } catch (error) {
                   Swal.fire({
-                     title: 'No se pudo borrar el archivo.',
+                     title: 'No se pudo borrar el movimiento.',
                      icon: 'error',
                   });
                }
             }
          });
       } catch (error) {}
+   };
+
+   const handleEditar = async (values: movimientoEditType) => {
+      try {
+         const editado = await editarMovimiento(values.id, values);
+         setMovimientoEditado(true);
+         fetchedMovimientos.current = false;
+         setMovimientos([]);
+         setTimeout(() => {
+            setMovimientoEditado(false);
+         }, 500);
+         setVerModalEditar(false);
+         Swal.fire({
+            title: 'Movimiento editado exitosamente.',
+            icon: 'success',
+         });
+      } catch (error) {
+         console.log('Error al editar movimiento', error);
+         Swal.fire({
+            title: 'Error al editar movimiento',
+            icon: 'error',
+         });
+      }
    };
 
    // useEffect(() => {
@@ -180,6 +207,12 @@ const verMovimientos = () => {
                      <option value="credito">Crédito</option>
                   </select>
                </div>
+               <button
+                  className="bg-[#5c7cab] hover:bg-[#4a6590] hover:cursor-pointer text-white px-4 py-2 rounded transition-colors duration-200 ml-auto"
+                  onClick={() => exportarExcel(movimientos)}
+               >
+                  Exportar Excel
+               </button>
             </div>
 
             <div className="overflow-x-auto shadow-lg rounded-lg">
@@ -219,7 +252,7 @@ const verMovimientos = () => {
                               colSpan={4}
                               className="py-6 text-center text-[#5c7cab]/80 font-medium"
                            >
-                              No hay empleados registrados
+                              No hay movimientos registrados
                            </td>
                         </tr>
                      ) : (
@@ -253,7 +286,22 @@ const verMovimientos = () => {
                                  )}
                               </td>
                               <td className="py-3 px-4 border-b border-gray-300 text-gray-800 flex gap-2">
-                                 <button className="text-white rounded-lg bg-main flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-115">
+                                 <button
+                                    className="text-white rounded-lg bg-main flex items-center gap-1 p-2 px-3 hover:cursor-pointer hover:brightness-115"
+                                    onClick={() => {
+                                       setVerModalEditar(true);
+                                       setMovimientoAEditar(movimiento);
+                                    }}
+                                 >
+                                    <div className="relative h-7 aspect-square">
+                                       <Image
+                                          src="/icons/edit.svg"
+                                          alt="Editar"
+                                          fill
+                                          sizes="10vw"
+                                          className="invert"
+                                       />
+                                    </div>
                                     Editar
                                  </button>
                                  <button
@@ -266,7 +314,7 @@ const verMovimientos = () => {
                                     <div className="relative h-7 aspect-square">
                                        <Image
                                           src="/icons/delete.svg"
-                                          alt=""
+                                          alt="Borrar"
                                           fill
                                           sizes="10vw"
                                        />
@@ -280,6 +328,185 @@ const verMovimientos = () => {
                   </tbody>
                </table>
             </div>
+
+            {verModalEditar && (
+               <div
+                  onClick={() => setVerModalEditar(false)}
+                  className="fixed inset-0 bg-black/60 flex items-center justify-center"
+               >
+                  <div
+                     onClick={(e) => e.stopPropagation()}
+                     className="bg-white rounded-lg p-6 max-w-md mx-8"
+                  >
+                     <h2 className="text-xl lg:text-2xl mb-4 text-main font-bold text-center uppercase">
+                        Nuevo empleado
+                     </h2>
+                     {verModalEditar && movimientoAEditar && (
+                        <Formik
+                           initialValues={{
+                              id: movimientoAEditar!.id,
+                              tipo: movimientoAEditar.tipo,
+                              formaPago: movimientoAEditar.formaPago,
+                              codigo: movimientoAEditar.codigo,
+                              precio: movimientoAEditar.precio,
+                              cantidad: movimientoAEditar.cantidad,
+                              fecha: movimientoAEditar
+                                 ? new Date(movimientoAEditar.fecha)
+                                      .toISOString()
+                                      .split('T')[0]
+                                 : '',
+                           }}
+                           onSubmit={handleEditar}
+                           enableReinitialize
+                           // validate={validarEmpleado}
+                        >
+                           {({ errors }) => (
+                              <Form className="font-(family-name:--font-montserrat)">
+                                 <div className="flex flex-col gap-8 my-8">
+                                    <div className="flex flex-col">
+                                       <div className="flex gap-2">
+                                          <label
+                                             htmlFor="tipo"
+                                             className="uppercase text-main font-bold lg:text-2xl"
+                                          >
+                                             Tipo:
+                                          </label>
+                                          <Field
+                                             as="select"
+                                             name="tipo"
+                                             id="tipo"
+                                             className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
+                                          >
+                                             <option value="venta">
+                                                Venta
+                                             </option>
+                                             <option value="compra">
+                                                Compra
+                                             </option>
+                                          </Field>
+                                       </div>
+                                       <ErrorMessage
+                                          name="tipo"
+                                          component="div"
+                                          className="text-red-500 text-sm uppercase font-bold text-center"
+                                       />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                       <div className="flex gap-2">
+                                          <label
+                                             htmlFor="formaPago"
+                                             className="uppercase text-main font-bold lg:text-2xl"
+                                          >
+                                             Tipo:
+                                          </label>
+                                          <Field
+                                             as="select"
+                                             name="formaPago"
+                                             id="formaPago"
+                                             className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
+                                          >
+                                             <option value="credito">
+                                                Crédito
+                                             </option>
+                                             <option value="contado">
+                                                Contado
+                                             </option>
+                                          </Field>
+                                       </div>
+                                       <ErrorMessage
+                                          name="formaPago"
+                                          component="div"
+                                          className="text-red-500 text-sm uppercase font-bold text-center"
+                                       />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                       <div className="flex gap-2">
+                                          <label
+                                             htmlFor="codigo"
+                                             className="uppercase text-main font-bold lg:text-2xl"
+                                          >
+                                             Código:
+                                          </label>
+                                          <Field
+                                             name="codigo"
+                                             id="codigo"
+                                             className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
+                                          />
+                                       </div>
+                                       <ErrorMessage
+                                          name="codigo"
+                                          component="div"
+                                          className="text-red-500 text-sm uppercase font-bold text-center"
+                                       />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                       <div className="flex gap-2">
+                                          <label
+                                             htmlFor="precio"
+                                             className="uppercase text-main font-bold lg:text-2xl"
+                                          >
+                                             Código:
+                                          </label>
+                                          <Field
+                                             name="precio"
+                                             id="precio"
+                                             type="number"
+                                             className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
+                                          />
+                                       </div>
+                                       <ErrorMessage
+                                          name="precio"
+                                          component="div"
+                                          className="text-red-500 text-sm uppercase font-bold text-center"
+                                       />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                       <div className="flex gap-2">
+                                          <label
+                                             htmlFor="cantidad"
+                                             className="uppercase text-main font-bold lg:text-2xl"
+                                          >
+                                             Código:
+                                          </label>
+                                          <Field
+                                             name="cantidad"
+                                             id="cantidad"
+                                             type="number"
+                                             className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
+                                          />
+                                       </div>
+                                       <ErrorMessage
+                                          name="cantidad"
+                                          component="div"
+                                          className="text-red-500 text-sm uppercase font-bold text-center"
+                                       />
+                                    </div>
+                                 </div>
+                                 <div className="flex">
+                                    <button
+                                       type="button"
+                                       className="border border-gray-300 px-4 py-2 mt-5 rounded-md bg-gray-400 text-white hover:brightness-115 hover:cursor-pointer mx-auto block font-(family-name:--font-montserrat) font-semibold text-sm lg:p-2 lg:text-xl"
+                                    >
+                                       Cancelar
+                                    </button>
+                                    <button
+                                       type="submit"
+                                       className="border border-gray-300 px-4 py-2 mt-5 rounded-md bg-main text-white hover:brightness-115 hover:cursor-pointer mx-auto block font-(family-name:--font-montserrat) font-semibold text-sm lg:p-2 lg:text-xl"
+                                    >
+                                       Guardar
+                                    </button>
+                                 </div>
+                              </Form>
+                           )}
+                        </Formik>
+                     )}
+                  </div>
+               </div>
+            )}
          </div>
       </>
    );

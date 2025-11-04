@@ -1,6 +1,12 @@
 import { empleadoDevueltoType } from './empleadoDevueltoType';
 
-type EstadoHorario = 'presente' | 'falta' | 'salud' | 'vacaciones' | '';
+type EstadoHorario =
+   | 'presente'
+   | 'falta'
+   | 'salud'
+   | 'vacaciones'
+   | 'libre'
+   | '';
 
 export type horarioDevueltoType = {
    fecha: string;

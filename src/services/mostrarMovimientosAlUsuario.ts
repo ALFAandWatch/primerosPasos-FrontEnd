@@ -5,13 +5,13 @@ interface Filters {
    formaPago?: 'contado' | 'credito';
 }
 
-export const listarMovimientosAdmin = async (
+export const mostrarMovimientosAlUsuario = async (
    usuarioId: number,
    filters?: Filters
 ) => {
    try {
       const response = await axiosInstance.get(
-         'movimientos/mostrarMovimientosLL',
+         'movimientos/mostrarRegistrosAlUsuario',
          {
             params: {
                usuarioId,

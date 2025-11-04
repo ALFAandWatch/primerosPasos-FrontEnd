@@ -216,7 +216,7 @@ const verArchivos = () => {
                               colSpan={4}
                               className="py-6 text-center text-[#5c7cab]/80 font-medium"
                            >
-                              No hay empleados registrados
+                              No hay archivos aún.
                            </td>
                         </tr>
                      ) : (
@@ -234,7 +234,7 @@ const verArchivos = () => {
                                     className="bg-white rounded-lg shadow p-2 hover:shadow-md transition overflow-hidden hover:cursor-pointer hover:brightness-90 relative"
                                  >
                                     {archivo.url.endsWith('.pdf') ? (
-                                       <div className="flex flex-col items-center justify-center h-32 bg-gray-100 rounded">
+                                       <div className="flex flex-col items-center justify-center h-15 aspect-square bg-gray-100 rounded">
                                           <span className="text-gray-500 text-xs font-medium">
                                              📄 PDF
                                           </span>

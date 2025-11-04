@@ -235,91 +235,94 @@ const personal = () => {
                   onClick={(e) => e.stopPropagation()}
                   className="bg-white rounded-lg p-6 max-w-md mx-8"
                >
-                  <h2 className="text-xl lg:text-2xl mb-4 text-main font-bold text-center uppercase">
+                  {/* <h2 className="text-xl lg:text-2xl mb-4 text-main font-bold text-center uppercase">
                      Nuevo empleado
-                  </h2>
+                  </h2> */}
                   <Formik
                      initialValues={initialValues}
                      onSubmit={handleSubmit}
                      validate={validarEmpleado}
                   >
                      {({ errors }) => (
-                        <Form className="font-(family-name:--font-montserrat)">
-                           <div className="flex flex-col gap-8 my-8">
-                              <div className="flex flex-col">
-                                 <div className="flex gap-2">
-                                    <label
-                                       htmlFor="nombre"
-                                       className="uppercase text-main font-bold lg:text-2xl"
-                                    >
-                                       Nombre:
-                                    </label>
-                                    <Field
-                                       name="nombre"
-                                       id="nombre"
-                                       className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
-                                    />
-                                 </div>
+                        <Form className="font-(family-name:--font-montserrat) bg-white p-8 rounded-xl shadow-md w-full max-w-lg mx-auto">
+                           <h2 className="text-2xl font-bold text-main mb-6 text-center uppercase tracking-wide">
+                              Nuevo Empleado
+                           </h2>
+
+                           <div className="flex flex-col gap-6">
+                              {/* Nombre */}
+                              <div className="flex flex-col gap-1">
+                                 <label
+                                    htmlFor="nombre"
+                                    className="text-sm font-semibold text-gray-700"
+                                 >
+                                    Nombre
+                                 </label>
+                                 <Field
+                                    name="nombre"
+                                    id="nombre"
+                                    className="border border-gray-300 rounded-md p-2 text-gray-900 focus:border-main focus:ring-main focus:ring-1 outline-none transition-all"
+                                 />
                                  <ErrorMessage
                                     name="nombre"
                                     component="div"
-                                    className="text-red-500 text-sm uppercase font-bold text-center"
+                                    className="text-red-500 text-xs font-semibold"
                                  />
                               </div>
 
-                              <div className="flex flex-col">
-                                 <div className="flex gap-2">
-                                    <label
-                                       htmlFor="apellido"
-                                       className="uppercase text-main font-bold lg:text-2xl"
-                                    >
-                                       Apellido:
-                                    </label>
-                                    <Field
-                                       name="apellido"
-                                       id="apellido"
-                                       className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
-                                    />
-                                 </div>
+                              {/* Apellido */}
+                              <div className="flex flex-col gap-1">
+                                 <label
+                                    htmlFor="apellido"
+                                    className="text-sm font-semibold text-gray-700"
+                                 >
+                                    Apellido
+                                 </label>
+                                 <Field
+                                    name="apellido"
+                                    id="apellido"
+                                    className="border border-gray-300 rounded-md p-2 text-gray-900 focus:border-main focus:ring-main focus:ring-1 outline-none transition-all"
+                                 />
                                  <ErrorMessage
                                     name="apellido"
                                     component="div"
-                                    className="text-red-500 text-sm uppercase font-bold text-center"
+                                    className="text-red-500 text-xs font-semibold"
                                  />
                               </div>
-                              <div className="flex flex-col">
-                                 <div className="flex gap-2">
-                                    <label
-                                       htmlFor="cedula"
-                                       className="uppercase text-main font-bold lg:text-2xl"
-                                    >
-                                       Cédula:
-                                    </label>
-                                    <Field
-                                       name="cedula"
-                                       id="cedula"
-                                       className="border-b-2 border-b-main grow text-black lg:p-2 lg:text-xl"
-                                    />
-                                 </div>
+
+                              {/* Cédula */}
+                              <div className="flex flex-col gap-1">
+                                 <label
+                                    htmlFor="cedula"
+                                    className="text-sm font-semibold text-gray-700"
+                                 >
+                                    Cédula
+                                 </label>
+                                 <Field
+                                    name="cedula"
+                                    id="cedula"
+                                    className="border border-gray-300 rounded-md p-2 text-gray-900 focus:border-main focus:ring-main focus:ring-1 outline-none transition-all"
+                                 />
                                  <ErrorMessage
                                     name="cedula"
                                     component="div"
-                                    className="text-red-500 text-sm uppercase font-bold text-center"
+                                    className="text-red-500 text-xs font-semibold"
                                  />
                               </div>
                            </div>
+
                            <button
                               type="submit"
-                              className="border border-gray-300 px-4 py-2 mt-5 rounded-md bg-main text-white hover:brightness-115 hover:cursor-pointer mx-auto block font-(family-name:--font-montserrat) font-semibold text-sm lg:p-2 lg:text-xl"
+                              className="mt-6 w-full flex items-center justify-center gap-2 bg-main text-white font-semibold py-2 rounded-md hover:brightness-110 transition cursor-pointer"
                            >
-                              <div className="relative w-5 h-5 inline-block mr-1 mb-1 align-middle">
+                              <span className="relative w-5 h-5">
                                  <Image
                                     src="/icons/add.svg"
-                                    alt="Enviar"
+                                    alt="Agregar"
                                     fill
                                     sizes="10vw"
                                  />
-                              </div>
+                              </span>
                               Agregar
                            </button>
                         </Form>

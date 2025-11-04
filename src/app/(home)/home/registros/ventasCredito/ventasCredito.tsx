@@ -1,4 +1,5 @@
 'use client';
+import RegistrosMovimientos from '@/components/RegistrosMovimientos/RegistrosMovimientos';
 import { nuevosMovimientos } from '@/services/nuevoMovimiento';
 import { movimientoType } from '@/types/movimientoType';
 import { validateMovimientos } from '@/utils/validateNuevosMovimientos';
@@ -19,8 +20,12 @@ type FormValues = {
    movimientos: movimientoType[];
 };
 
+const tipo = 'venta';
+const formaPago = 'credito';
+
 const ventasCredito = () => {
    const [usuario, setUsuario] = useState<{ id: number } | null>(null);
+   const [enviado, setEnviado] = useState(false);
 
    const today = new Date();
 
@@ -58,6 +63,10 @@ const ventasCredito = () => {
 
          await nuevosMovimientos(movimientosconEmpresa);
          Swal.fire('Éxito', 'Movimientos guardados correctamente', 'success');
+         setEnviado(true);
+         setTimeout(() => {
+            setEnviado(false);
+         }, 500);
       } catch (error: any) {
          Swal.fire(
             'Error',
@@ -416,7 +425,7 @@ const ventasCredito = () => {
                            )}
                         </FieldArray>
                      </table>
-                     <hr className="border-1" />
+                     {/* <hr className="border-1" /> */}
                      <button
                         type="submit"
                         aria-label="Enviar datos"
@@ -435,6 +444,21 @@ const ventasCredito = () => {
                   </Form>
                )}
             </Formik>
+            {/* TABLA DE SEGUIMIENTO PARA EL USUARIO */}
+            <hr className="border-1 mt-10" />
+            <div className="mt-10">
+               <p className=" font-(family-name:--font-open-sans) text-main pb-6">
+                  Visualiza el historial completo de tus registros. Esta tabla
+                  es de uso informativo para ayudarte a hacer seguimiento de tus
+                  operaciones realizadas.
+               </p>
+               <RegistrosMovimientos
+                  tipo={tipo}
+                  formaPago={formaPago}
+                  usuarioId={usuario.id}
+                  enviado={enviado}
+               />
+            </div>
          </div>
       </>
    );
