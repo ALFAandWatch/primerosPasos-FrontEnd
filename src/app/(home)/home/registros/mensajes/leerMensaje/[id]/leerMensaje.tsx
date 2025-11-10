@@ -1,20 +1,33 @@
 'use client';
 
+import { enviarMensaje } from '@/services/enviarMensaje';
 import { marcarComoLeido } from '@/services/marcarComoLeido';
 import { traerMensajePorId } from '@/services/traerMensajePorId';
 import { mensajesDevueltosType } from '@/types/mensajesDevueltosType';
+import { nuevoMensajeType } from '@/types/nuevoMensajeType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
+import { ErrorMessage, Field, FieldInputProps, Form, Formik } from 'formik';
 import { Span } from 'next/dist/trace';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const leerMensaje = () => {
    const router = useRouter();
    const { id } = useParams();
    const mensajeId = Number(id);
 
+   const [usuario, setUsuario] = useState<{ id: number } | null>(null);
    const [mensaje, setMensaje] = useState<mensajesDevueltosType | null>(null);
+   const [mostrarComposeModal, setMostrarComposeModal] = useState(false);
+
+   useEffect(() => {
+      const stored = sessionStorage.getItem('usuario');
+      if (stored) {
+         setUsuario(JSON.parse(stored));
+      }
+   }, []);
 
    useEffect(() => {
       const fetchMensaje = async (id: number) => {
@@ -43,9 +56,35 @@ const leerMensaje = () => {
       leido();
    }, [mensaje]);
 
-   useEffect(() => {
-      console.log(mensaje);
-   }, [mensaje]);
+   const initialValues: nuevoMensajeType = {
+      asunto: mensaje?.asunto || '',
+      contenido: '',
+      remitenteId: usuario?.id || 'admin',
+      destinatarioId: mensaje?.remitente.id ?? 0,
+      mensajePadreId: mensajeId,
+   };
+
+   // useEffect(() => {
+   //    console.log('DATOS DEL MENSAJE QUE ESTOY LEYENDO: ', mensaje);
+   // }, [mensaje]);
+
+   // useEffect(() => {
+   //    console.log('INITIAL VALUES: ', initialValues);
+   // }, [initialValues]);
+
+   const handleEnviarMensaje = async (data: nuevoMensajeType) => {
+      try {
+         await enviarMensaje(data);
+         setMostrarComposeModal(false);
+         Swal.fire('Éxito', 'Mensaje enviado correctamente', 'success').then(
+            () => {
+               router.push('/home/registros/mensajes');
+            }
+         );
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
    return (
       <>
@@ -62,6 +101,14 @@ const leerMensaje = () => {
                <h1 className="text-xl lg:text-2xl font-semibold text-main">
                   Mensaje
                </h1>
+            </div>
+            <div className="flex justify-end">
+               <button
+                  className="bg-main text-white p-3 px-4 rounded-lg"
+                  onClick={() => setMostrarComposeModal(true)}
+               >
+                  Responder
+               </button>
             </div>
 
             {/* Contenedor del mensaje */}
@@ -120,6 +167,90 @@ const leerMensaje = () => {
                )}
             </div>
          </div>
+
+         {/* MODAL RESPONDER MENSAJE */}
+         {mostrarComposeModal && (
+            <>
+               {/* Overlay + contenedor */}
+               <div
+                  className="fixed inset-0 bg-black/50 flex items-center justify-center z-40"
+                  onClick={() => setMostrarComposeModal(false)}
+               >
+                  {/* Caja del modal */}
+                  <div
+                     className="bg-fondo p-6 rounded-lg shadow-lg w-[90%] max-w-lg md:max-w-2xl lg:max-w-3xl"
+                     onClick={(e) => e.stopPropagation()} // evita cerrar al clickear adentro
+                  >
+                     <Formik
+                        onSubmit={handleEnviarMensaje}
+                        initialValues={initialValues}
+                        enableReinitialize
+                        // validate={validateNuevoMensajeAdmin}
+                     >
+                        {({ values, errors, touched }) => (
+                           <Form className="flex flex-col gap-4">
+                              <h2 className="text-xl md:text-2xl text-main font-bold text-center uppercase">
+                                 Nuevo Mensaje
+                              </h2>
+
+                              <Field name="destinatario">
+                                 {({
+                                    field,
+                                 }: {
+                                    field: FieldInputProps<string>;
+                                 }) => (
+                                    <input
+                                       {...field}
+                                       type="text"
+                                       value="Administrador General"
+                                       disabled
+                                       className="w-full border-2 border-gray-300 p-2 rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    />
+                                 )}
+                              </Field>
+                              <Field type="hidden" name="destinatarioId" />
+
+                              <Field
+                                 name="asunto"
+                                 className="w-full border-2 border-yellow-600/30 p-2 rounded bg-[#FFF8DC] placeholder:text-gray-400 placeholder:italic text-black"
+                                 placeholder="Asunto"
+                              />
+
+                              <Field name="contenido">
+                                 {({ field, meta }: any) => (
+                                    <textarea
+                                       {...field}
+                                       placeholder="Escribe tu mensaje..."
+                                       className={`w-full border-2 p-2 rounded h-32 md:h-40 bg-[#FFF8DC] placeholder:text-gray-400 placeholder:italic text-black ${
+                                          meta.touched && meta.error
+                                             ? 'border-red-400 bg-red-400/10'
+                                             : 'border-yellow-600/30'
+                                       }`}
+                                    />
+                                 )}
+                              </Field>
+
+                              <ErrorMessage
+                                 name="contenido"
+                                 component="div"
+                                 className="text-red-500 text-sm mt-1 p-2 bg-red-100 rounded"
+                              />
+
+                              <div className="flex justify-end">
+                                 <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-main text-white rounded hover:bg-main/90 transition"
+                                 >
+                                    Enviar
+                                 </button>
+                              </div>
+                           </Form>
+                        )}
+                     </Formik>
+                  </div>
+               </div>
+            </>
+         )}
       </>
    );
 };

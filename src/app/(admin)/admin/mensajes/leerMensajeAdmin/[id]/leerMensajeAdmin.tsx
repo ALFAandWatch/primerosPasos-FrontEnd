@@ -2,12 +2,11 @@
 
 import { enviarMensaje } from '@/services/enviarMensaje';
 import { marcarComoLeido } from '@/services/marcarComoLeido';
-import { traerEmpresaPorId } from '@/services/traerEmpresaPorId';
 import { traerMensajePorId } from '@/services/traerMensajePorId';
 import { mensajesDevueltosType } from '@/types/mensajesDevueltosType';
 import { nuevoMensajeType } from '@/types/nuevoMensajeType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, FieldInputProps, Form, Formik } from 'formik';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -25,15 +24,10 @@ const leerMensajeAdmin = () => {
 
    const [mensaje, setMensaje] = useState<mensajesDevueltosType | null>(null);
    const [mostrarComposeModal, setMostrarComposeModal] = useState(false);
-   const [filtered, setFiltered] = useState<Empresa[]>([]);
-   const [query, setQuery] = useState('');
-   const [mensajeEnviado, setMensajeEnviado] = useState(false);
-   const [usuario, setUsuario] = useState<{ id: number } | null>(null);
-   const [destinatario, setDestinatario] = useState('');
 
-   const [loading, setLoading] = useState(true);
-   const [resolvedInitialValues, setResolvedInitialValues] =
-      useState<nuevoMensajeType | null>(null);
+   const [usuario, setUsuario] = useState<{ id: number } | null>(null);
+
+   const destinatarioNombre = mensaje?.remitente.nombreEmpresa ?? '';
 
    useEffect(() => {
       const stored = sessionStorage.getItem('usuario');
@@ -69,54 +63,31 @@ const leerMensajeAdmin = () => {
       leido();
    }, [mensaje]);
 
-   useEffect(() => {
-      console.log(mensaje);
-   }, [mensaje]);
-
    const initialValues: nuevoMensajeType = {
-      asunto: '',
+      asunto: mensaje?.asunto || '',
       contenido: '',
       remitenteId: usuario?.id || 'admin',
       destinatarioId: mensaje?.remitente.id ?? 0,
       mensajePadreId: mensajeId,
    };
 
-   useEffect(() => {
-      const fetchEmpresa = async () => {
-         let empresaNombre = '';
-         if (initialValues.destinatarioId) {
-            try {
-               const empresa = await traerEmpresaPorId(
-                  Number(initialValues.destinatarioId)
-               );
-               if (empresa) {
-                  empresaNombre = empresa.nombreEmpresa;
-               }
-            } catch (error) {
-               console.error(error);
-            }
-         }
+   // useEffect(() => {
+   //    console.log('DATOS DEL MENSAJE QUE ESTOY LEYENDO: ', mensaje);
+   // }, [mensaje]);
 
-         setDestinatario(empresaNombre);
-         setResolvedInitialValues({
-            ...initialValues,
-            destinatarioId: initialValues.destinatarioId,
-         });
-         setLoading(false);
-      };
-
-      fetchEmpresa();
-   }, [initialValues]);
+   // useEffect(() => {
+   //    console.log('INITIAL VALUES: ', initialValues);
+   // }, [initialValues]);
 
    const handleEnviarMensaje = async (data: nuevoMensajeType) => {
       try {
          await enviarMensaje(data);
-         setMensajeEnviado(true);
-         setTimeout(() => {
-            setMensajeEnviado(false);
-         }, 500);
          setMostrarComposeModal(false);
-         Swal.fire('Éxito', 'Mensaje enviado correctamente', 'success');
+         Swal.fire('Éxito', 'Mensaje enviado correctamente', 'success').then(
+            () => {
+               router.push('/admin/mensajes');
+            }
+         );
       } catch (error) {
          console.log(error);
       }
@@ -220,6 +191,7 @@ const leerMensajeAdmin = () => {
                      <Formik
                         onSubmit={handleEnviarMensaje}
                         initialValues={initialValues}
+                        enableReinitialize
                         // validate={validateNuevoMensajeAdmin}
                      >
                         {({ values, errors, touched }) => (
@@ -229,47 +201,21 @@ const leerMensajeAdmin = () => {
                               </h2>
 
                               <Field name="destinatario">
-                                 {({ field, form }: any) => (
-                                    <div className="relative">
-                                       <input
-                                          {...field}
-                                          type="text"
-                                          placeholder="Buscar empresa..."
-                                          value={query}
-                                          onChange={(e) => {
-                                             setQuery(e.target.value);
-                                             form.setFieldValue(
-                                                'destinatario',
-                                                e.target.value
-                                             );
-                                          }}
-                                          className="w-full border-2 border-yellow-600/30 p-2 rounded bg-[#FFF8DC] placeholder:text-gray-400 placeholder:italic text-black"
-                                       />
-                                       {filtered.length > 0 && (
-                                          <ul className="absolute z-10 bg-white border border-gray-300 rounded mt-1 w-full max-h-40 overflow-y-auto shadow text-gray-500 italic">
-                                             {filtered.map((empresa) => (
-                                                <li
-                                                   key={empresa.id}
-                                                   className="p-2 cursor-pointer hover:bg-gray-100"
-                                                   onClick={() => {
-                                                      setQuery(
-                                                         empresa.nombreEmpresa
-                                                      );
-                                                      form.setFieldValue(
-                                                         'destinatarioId',
-                                                         empresa.id
-                                                      ); // guarda el id real
-                                                      setFiltered([]);
-                                                   }}
-                                                >
-                                                   {empresa.nombreEmpresa}
-                                                </li>
-                                             ))}
-                                          </ul>
-                                       )}
-                                    </div>
+                                 {({
+                                    field,
+                                 }: {
+                                    field: FieldInputProps<string>;
+                                 }) => (
+                                    <input
+                                       {...field}
+                                       type="text"
+                                       value={destinatarioNombre}
+                                       disabled
+                                       className="w-full border-2 border-gray-300 p-2 rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    />
                                  )}
                               </Field>
+                              <Field type="hidden" name="destinatarioId" />
 
                               <Field
                                  name="asunto"
