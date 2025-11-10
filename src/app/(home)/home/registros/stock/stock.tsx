@@ -1,4 +1,5 @@
 'use client';
+import RegistrosStock from '@/components/RegistrosStock/RegistrosStock';
 import { registrarStock } from '@/services/registrarStock';
 import { stockType } from '@/types/stockType';
 import { validateStock } from '@/utils/validateStock';
@@ -20,6 +21,7 @@ type FormValues = {
 
 const stock = () => {
    const [usuario, setUsuario] = useState<{ id: number } | null>(null);
+   const [enviado, setEnviado] = useState(false);
 
    useEffect(() => {
       const stored = sessionStorage.getItem('usuario');
@@ -46,6 +48,10 @@ const stock = () => {
    const handleSubmit = async (stockData: stockType[]) => {
       try {
          await registrarStock(stockData);
+         setEnviado(true);
+         setTimeout(() => {
+            setEnviado(false);
+         }, 500);
          Swal.fire('Éxito', 'Movimientos guardados correctamente', 'success');
       } catch (error: any) {
          Swal.fire(
@@ -346,6 +352,16 @@ const stock = () => {
                   </Form>
                )}
             </Formik>
+            {/* TABLA DE SEGUIMIENTO PARA EL USUARIO */}
+            <hr className="border-1 mt-10" />
+            <div className="mt-10">
+               <p className=" font-(family-name:--font-open-sans) text-main pb-6">
+                  Visualiza el historial completo de tus registros. Esta tabla
+                  es de uso informativo para ayudarte a hacer seguimiento de tus
+                  operaciones realizadas.
+               </p>
+               <RegistrosStock usuarioId={usuario.id} enviado={enviado} />
+            </div>
          </div>
       </>
    );

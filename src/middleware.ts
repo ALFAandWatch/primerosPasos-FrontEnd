@@ -5,19 +5,31 @@ export function middleware(request: NextRequest) {
    const token = request.cookies.get('token')?.value;
    const pathname = request.nextUrl.pathname;
 
-   const isPublic = pathname === '/login' || pathname === '/adminLogin';
+   const isUserLogin = pathname === '/login';
+   const isAdminLogin = pathname === '/adminLogin';
+   const isAdminRoute = pathname.startsWith('/admin');
 
-   // Si no hay token y la ruta no es /login, redirigir
-   if (!token && !isPublic) {
-      const loginUrl = new URL('/login', request.url);
-      return NextResponse.redirect(loginUrl);
+   // Si ruta es pública, dejar pasar
+   if (isUserLogin || isAdminLogin) {
+      return NextResponse.next();
    }
 
-   // Si hay token o está en login, continuar
+   // Si NO hay token
+   if (!token) {
+      // Rutas admin → login admin
+      if (isAdminRoute) {
+         return NextResponse.redirect(new URL('/adminLogin', request.url));
+      }
+
+      // Rutas usuario → login normal
+      return NextResponse.redirect(new URL('/login', request.url));
+   }
+
+   // Si hay token → continuar
    return NextResponse.next();
 }
 
-// Definís las rutas donde corre el middleware
+// Rutas donde corre el middleware
 export const config = {
    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

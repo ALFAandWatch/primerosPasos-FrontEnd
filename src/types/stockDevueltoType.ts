@@ -7,4 +7,5 @@ export type stockDevueltoType = {
       id: number;
       nombreEmpresa: string;
    };
+   fechaRegistro: Date;
 };

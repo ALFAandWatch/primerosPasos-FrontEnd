@@ -1,52 +1,42 @@
 import { mostrarMovimientosAlUsuario } from '@/services/mostrarMovimientosAlUsuario';
+import { mostrarStockAlUsuario } from '@/services/mostrarStockAlUsuario';
 import { movimientoDevueltoType } from '@/types/movimientosDevueltosType';
+import { stockDevueltoType } from '@/types/stockDevueltoType';
 import { formatearFechaCorta } from '@/utils/formatearFechaMail';
 import { useEffect, useState } from 'react';
 
-interface RegistrosMovimientosProps {
-   tipo: string;
-   formaPago: string;
+interface RegistrosStockProps {
    usuarioId: number;
    enviado: boolean;
 }
 
-const RegistrosMovimientos = ({
-   tipo,
-   formaPago,
-   usuarioId,
-   enviado,
-}: RegistrosMovimientosProps) => {
-   const [movimientos, setMovimientos] = useState<movimientoDevueltoType[]>([]);
-
-   const filters = {
-      tipo: tipo as 'venta' | 'compra' | undefined,
-      formaPago: formaPago as 'contado' | 'credito' | undefined,
-   };
+const RegistrosStock = ({ usuarioId, enviado }: RegistrosStockProps) => {
+   const [stock, setStock] = useState<stockDevueltoType[]>([]);
 
    useEffect(() => {
-      const fetchMovimientos = async () => {
+      const fetchStock = async () => {
          try {
-            const res = await mostrarMovimientosAlUsuario(usuarioId, filters);
-            // console.log('Lo que me llego del back', res);
-            setMovimientos(res.data.items);
+            const res = await mostrarStockAlUsuario(usuarioId);
+            console.log('Lo que me llego del back', res);
+            setStock(res.data.items);
          } catch (error) {
             console.log(error);
          }
       };
-      fetchMovimientos();
+      fetchStock();
    }, []);
 
    useEffect(() => {
-      const fetchMovimientos = async () => {
+      const fetchStock = async () => {
          try {
-            const res = await mostrarMovimientosAlUsuario(usuarioId, filters);
+            const res = await mostrarStockAlUsuario(usuarioId);
             // console.log('Lo que me llego del back', res);
-            setMovimientos(res.data.items);
+            setStock(res);
          } catch (error) {
             console.log(error);
          }
       };
-      fetchMovimientos();
+      fetchStock();
    }, [enviado]);
 
    return (
@@ -58,7 +48,7 @@ const RegistrosMovimientos = ({
                      Código
                   </th>
                   <th className="py-2 px-3 text-left text-gray-500 font-medium uppercase text-xs">
-                     Precio
+                     Precio de Compra
                   </th>
                   <th className="py-2 px-3 text-left text-gray-500 font-medium uppercase text-xs">
                      Cantidad
@@ -70,32 +60,29 @@ const RegistrosMovimientos = ({
             </thead>
 
             <tbody>
-               {movimientos.length === 0 ? (
+               {stock.length === 0 ? (
                   <tr>
                      <td
                         colSpan={7}
                         className="py-6 text-center text-gray-500 font-medium"
                      >
-                        No hay movimientos registrados
+                        No hay stock registrado
                      </td>
                   </tr>
                ) : (
-                  movimientos.map((movimiento) => (
-                     <tr
-                        key={movimiento.id}
-                        className="border-b border-gray-200"
-                     >
+                  stock.map((stock) => (
+                     <tr key={stock.id} className="border-b border-gray-200">
                         <td className="py-2 px-3 text-gray-700">
-                           {movimiento.codigo}
+                           {stock.codigo}
                         </td>
                         <td className="py-2 px-3 text-gray-700">
-                           {movimiento.precio}
+                           {stock.precioCompra}
                         </td>
                         <td className="py-2 px-3 text-gray-700">
-                           {movimiento.cantidad}
+                           {stock.cantidad}
                         </td>
                         <td className="py-2 px-3 text-gray-700">
-                           {formatearFechaCorta(new Date(movimiento.fecha))}
+                           {formatearFechaCorta(new Date(stock.fechaRegistro))}
                         </td>
                      </tr>
                   ))
@@ -106,4 +93,4 @@ const RegistrosMovimientos = ({
    );
 };
 
-export default RegistrosMovimientos;
+export default RegistrosStock;
